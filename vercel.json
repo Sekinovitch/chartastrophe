@@ -1,11 +1,13 @@
 {
+  "functions": {
+    "wsgi.py": {
+      "runtime": "python3.11"
+    }
+  },
   "rewrites": [
     {
       "source": "/(.*)",
       "destination": "/wsgi.py"
     }
-  ],
-  "env": {
-    "FLASK_ENV": "production"
-  }
+  ]
 } 

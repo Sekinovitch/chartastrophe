@@ -1,6 +1,8 @@
 # Chartastrophe - Essential dependencies
 # Absurd correlation generator application
 
+--extra-index-url https://download.pytorch.org/whl/cpu
+
 # Web framework
 flask>=2.3.0
 python-dotenv>=1.0.0
@@ -25,7 +27,6 @@ structlog>=24.1.0
 
 # AI and NLP (for explanations)
 transformers>=4.30.0
---extra-index-url https://download.pytorch.org/whl/cpu
 torch>=2.0.0
 
 # Security
