@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chartastrophe - Discover correlations with real data!</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="32x32" href="/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+        .correlation-card {
+            display: none;
+            margin: 30px auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            max-width: 1000px;
+            width: 95%;
+        }
+        #plotDiv {
+            width: 100%;
+            height: 500px;
+            margin: 30px auto;
+            border-radius: 15px;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            background: white;
+        }
+        .btn-generate {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: 600;
+            border-radius: 50px;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        .btn-generate:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+        .btn-generate:active {
+            transform: translateY(0px);
+        }
+        .correlation-title {
+            color: #2d3436;
+            font-weight: 700;
+            font-size: 1.6em;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        .correlation-title span {
+            transition: all 0.3s ease;
+        }
+        .correlation-title span:hover {
+            transform: scale(1.05);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .correlation-explanation {
+            color: #636e72;
+            line-height: 1.8;
+            font-size: 1.1em;
+            text-align: justify;
+            margin-bottom: 25px;
+        }
+        .sources-section {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f8f9fa 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid rgba(33, 150, 243, 0.2);
+        }
+        .source-link {
+            color: #1565c0;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .source-link:hover {
+            color: #0d47a1;
+            text-decoration: underline;
+            transform: translateX(5px);
+        }
+
+        .share-buttons {
+            margin-top: 30px;
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+        }
+        .btn-share {
+            margin: 8px;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .btn-twitter {
+            background: linear-gradient(135deg, #1da1f2 0%, #0d8bd9 100%);
+            color: white;
+        }
+        .btn-twitter:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(29, 161, 242, 0.4);
+        }
+        .btn-facebook {
+            background: linear-gradient(135deg, #4267B2 0%, #365899 100%);
+            color: white;
+        }
+        .btn-facebook:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(66, 103, 178, 0.4);
+        }
+        .btn-instagram {
+            background: linear-gradient(45deg, #405de6, #5851db, #833ab4, #c13584, #e1306c, #fd1d1d);
+            color: white;
+        }
+        .btn-instagram:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.1);
+        }
+        .btn-outline-info {
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(23, 162, 184, 0.3);
+        }
+        header h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+        }
+        .coefficient-badge {
+            background-color: #00b894;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+        .feedback-section {
+            margin-top: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        .feedback-buttons {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .btn-feedback {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            min-width: 150px;
+        }
+        .btn-funny {
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            color: white;
+        }
+        .btn-funny:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.4);
+        }
+        .btn-mild {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+        }
+        .btn-mild:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(116, 185, 255, 0.4);
+        }
+        .btn-boring {
+            background: linear-gradient(135deg, #636e72 0%, #2d3436 100%);
+            color: white;
+        }
+        .btn-boring:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(99, 110, 114, 0.4);
+        }
+        .btn-feedback:disabled {
+            opacity: 0.6;
+            transform: none !important;
+            cursor: not-allowed;
+        }
+        .feedback-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        .feedback-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .feedback-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        /* Perfect graph centering */
+        .graph-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        /* Override Plotly default positioning */
+        #plotDiv {
+            width: 100% !important;
+            max-width: 900px !important;
+            margin: 0 auto !important;
+            position: relative !important;
+            left: auto !important;
+            right: auto !important;
+            transform: translateX(0) !important;
+        }
+        
+        /* Center Plotly container */
+        #plotDiv > div {
+            margin: 0 auto !important;
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <header class="text-center mb-5">
+            <h1 class="display-4">
+                <svg class="chart-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="48" height="48" style="vertical-align: text-bottom; margin-right: 10px;">
+                    <!-- Background with gradient -->
+                    <defs>
+                        <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="chart" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#00b894;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#00a085;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    
+                    <!-- Fond rond -->
+                    <circle cx="16" cy="16" r="15" fill="url(#bg)" stroke="#fff" stroke-width="1"/>
+                    
+                    <!-- Axes du graphique -->
+                    <line x1="6" y1="26" x2="26" y2="26" stroke="#fff" stroke-width="1.5"/>
+                    <line x1="6" y1="26" x2="6" y2="6" stroke="#fff" stroke-width="1.5"/>
+                    
+                    <!-- Data points -->
+                    <circle cx="9" cy="22" r="1.5" fill="#fff"/>
+                    <circle cx="12" cy="18" r="1.5" fill="#fff"/>
+                    <circle cx="15" cy="14" r="1.5" fill="#fff"/>
+                    <circle cx="18" cy="12" r="1.5" fill="#fff"/>
+                    <circle cx="21" cy="10" r="1.5" fill="#fff"/>
+                    <circle cx="24" cy="8" r="1.5" fill="#fff"/>
+                    
+                    <!-- Ligne de tendance -->
+                    <line x1="8" y1="23" x2="25" y2="7" stroke="#fff" stroke-width="2" opacity="0.8"/>
+                </svg>
+                Chartastrophe
+            </h1>
+            <p class="lead text-muted">Discover surprising correlations with real data!</p>
+        </header>
+
+        <div class="text-center mb-4">
+            <button id="generateBtn" class="btn btn-primary btn-generate">
+                <i class="fas fa-refresh"></i> Generate new correlation
+            </button>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">🔍 Analyzing thousands of public datasets...</p>
+        </div>
+
+        <div id="correlationCard" class="correlation-card">
+            <h2 id="correlationTitle" class="correlation-title mb-3"></h2>
+            <p id="correlationExplanation" class="correlation-explanation mb-4"></p>
+            
+            <!-- Graph centered -->
+            <div class="graph-container">
+                <div id="plotDiv" class="mb-4"></div>
+            </div>
+
+            <!-- Feedback buttons -->
+            <div class="feedback-section">
+                <h5><i class="fas fa-thumbs-up"></i> Did this correlation make you laugh?</h5>
+                <div class="feedback-buttons">
+                    <button id="feedbackFunny" class="btn btn-feedback btn-funny">
+                        <i class="fas fa-laugh"></i> 😂 Hilarious!
+                    </button>
+                    <button id="feedbackMild" class="btn btn-feedback btn-mild">
+                        <i class="fas fa-smile"></i> 🙂 Funny
+                    </button>
+                    <button id="feedbackBoring" class="btn btn-feedback btn-boring">
+                        <i class="fas fa-meh"></i> 😐 Not funny
+                    </button>
+                </div>
+                <div id="feedbackMessage" class="feedback-message" style="display: none;"></div>
+            </div>
+
+            <div class="share-buttons">
+                <h5><i class="fas fa-share-alt"></i> Share this discovery</h5>
+                <button id="shareTwitter" class="btn btn-share btn-twitter">
+                    <i class="fab fa-twitter"></i> Twitter
+                </button>
+                <button id="shareFacebook" class="btn btn-share btn-facebook">
+                    <i class="fab fa-facebook-f"></i> Facebook
+                </button>
+                <button id="shareInstagram" class="btn btn-share btn-instagram">
+                    <i class="fab fa-instagram"></i> Instagram
+                </button>
+            </div>
+
+            <!-- Data sources button and section at the bottom -->
+            <div class="text-center mt-4 pt-3" style="border-top: 1px solid #e9ecef;">
+                <button id="showSourcesBtn" class="btn btn-outline-info btn-sm">
+                    <i class="fas fa-database"></i> View data sources
+                </button>
+            </div>
+
+            <div id="sourcesSection" class="sources-section mt-3" style="display: none;">
+                <h5><i class="fas fa-database"></i> Data Sources</h5>
+                <div id="sourcesList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentCorrelation = null;
+
+        document.getElementById('generateBtn').addEventListener('click', async () => {
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('correlationCard').style.display = 'none';
+
+            try {
+                // API call
+                const response = await fetch('/api/correlation/random');
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    const data = result.data;
+                    currentCorrelation = data;
+                    
+                    // Update elements with enhanced formatting
+                    updateCorrelationTitle(data.title || 'Correlation found!', data.series1_name, data.series2_name);
+                    document.getElementById('correlationExplanation').textContent = getRandomScientificExplanation();
+
+                    // Hide sources by default
+                    document.getElementById('sourcesSection').style.display = 'none';
+                    document.getElementById('showSourcesBtn').textContent = 'View data sources';
+
+                    // Update sources
+                    updateSourcesSection(data.sources);
+
+                    // Reset feedback buttons
+                    resetFeedbackButtons();
+
+                    // Get and display enhanced graph
+                    try {
+                        const graphResponse = await fetch(`/api/correlation/graph/${data.correlation_id}`);
+                        const graphResult = await graphResponse.json();
+                        
+                        if (graphResult.status === 'success') {
+                            const plotData = JSON.parse(graphResult.data);
+                            Plotly.newPlot('plotDiv', plotData.data, plotData.layout, {responsive: true});
+                        } else {
+                            createSimpleGraph(data);
+                        }
+                    } catch {
+                        createSimpleGraph(data);
+                    }
+                    
+                    // Show card
+                    document.getElementById('correlationCard').style.display = 'block';
+                } else {
+                    alert(result.message || 'An error occurred');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while generating the correlation');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+
+        // Handler to show/hide sources
+        document.getElementById('showSourcesBtn').addEventListener('click', () => {
+            const sourcesSection = document.getElementById('sourcesSection');
+            const btn = document.getElementById('showSourcesBtn');
+            
+            if (sourcesSection.style.display === 'none') {
+                sourcesSection.style.display = 'block';
+                btn.innerHTML = '<i class="fas fa-database"></i> Hide sources';
+            } else {
+                sourcesSection.style.display = 'none';
+                btn.innerHTML = '<i class="fas fa-database"></i> View data sources';
+            }
+        });
+
+
+
+        function updateSourcesSection(sources) {
+            const sourcesList = document.getElementById('sourcesList');
+            sourcesList.innerHTML = '';
+
+            if (sources && sources.length > 0) {
+                sources.forEach(source => {
+                    const sourceDiv = document.createElement('div');
+                    sourceDiv.className = 'mb-2';
+                    sourceDiv.innerHTML = `
+                        <p class="mb-1">
+                            <i class="fas fa-external-link-alt"></i> 
+                            <a href="${source.url}" target="_blank" class="source-link">${source.name}</a>
+                            <span class="badge bg-secondary ms-2">${source.category}</span>
+                        </p>
+                    `;
+                    sourcesList.appendChild(sourceDiv);
+                });
+            } else {
+                sourcesList.innerHTML = '<p class="text-muted">Sources not available</p>';
+            }
+        }
+
+        function createSimpleGraph(data) {
+            const trace = {
+                x: data.data_x,
+                y: data.data_y,
+                mode: 'markers',
+                type: 'scatter',
+                marker: {
+                    color: '#6c5ce7',
+                    size: 8,
+                    opacity: 0.7
+                },
+                name: 'Data'
+            };
+
+            const layout = {
+                title: {
+                    text: `Correlation: ${data.series1_name} vs ${data.series2_name}`,
+                    font: { size: 16 }
+                },
+                xaxis: {
+                    title: data.series1_name,
+                    gridcolor: 'rgba(128,128,128,0.2)'
+                },
+                yaxis: {
+                    title: data.series2_name,
+                    gridcolor: 'rgba(128,128,128,0.2)'
+                },
+                plot_bgcolor: 'white',
+                paper_bgcolor: 'white',
+                margin: { l: 60, r: 30, t: 60, b: 60 }
+            };
+
+            Plotly.newPlot('plotDiv', [trace], layout, {responsive: true});
+        }
+
+        // Share handlers
+        document.getElementById('shareTwitter').addEventListener('click', () => {
+            if (currentCorrelation) {
+                const text = `🔍 Discovery: ${currentCorrelation.title}! ${(Math.abs(currentCorrelation.correlation) * 100).toFixed(1)}% correlation between ${currentCorrelation.series1_name} and ${currentCorrelation.series2_name}. #Chartastrophe #Data`;
+                const url = encodeURIComponent(window.location.href);
+                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${url}`, '_blank');
+            }
+        });
+
+        document.getElementById('shareFacebook').addEventListener('click', () => {
+            if (currentCorrelation) {
+                const url = encodeURIComponent(window.location.href);
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+            }
+        });
+
+        document.getElementById('shareInstagram').addEventListener('click', async () => {
+            if (currentCorrelation) {
+                try {
+                    // First, capture the Plotly graph as an image
+                    const plotlyImage = await Plotly.toImage('plotDiv', {
+                        format: 'png',
+                        width: 800,
+                        height: 600,
+                        scale: 2 // High quality
+                    });
+                    
+                    // Create main canvas for Instagram post (square format)
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = 1080;
+                    canvas.height = 1080;
+                    
+                    // Gradient background
+                    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                    gradient.addColorStop(0, '#667eea');
+                    gradient.addColorStop(1, '#764ba2');
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // White text setup
+                    ctx.fillStyle = 'white';
+                    ctx.textAlign = 'center';
+                    
+                    // Title at the top
+                    ctx.font = 'bold 42px Arial';
+                    const lines = wrapText(ctx, currentCorrelation.title, canvas.width - 80);
+                    let y = 80;
+                    lines.forEach(line => {
+                        ctx.fillText(line, canvas.width / 2, y);
+                        y += 50;
+                    });
+                    
+                    // Add some spacing
+                    y += 30;
+                    
+                    // Load and draw the plot image
+                    const plotImg = new Image();
+                    plotImg.onload = function() {
+                        // Calculate positioning for the graph (centered, with margins)
+                        const graphWidth = Math.min(800, canvas.width - 120);
+                        const graphHeight = (graphWidth * plotImg.height) / plotImg.width;
+                        const graphX = (canvas.width - graphWidth) / 2;
+                        const graphY = y;
+                        
+                        // White background for the graph
+                        ctx.fillStyle = 'white';
+                        ctx.fillRect(graphX - 10, graphY - 10, graphWidth + 20, graphHeight + 20);
+                        
+                        // Draw the graph
+                        ctx.drawImage(plotImg, graphX, graphY, graphWidth, graphHeight);
+                        
+                        // Reset text style
+                        ctx.fillStyle = 'white';
+                        ctx.textAlign = 'center';
+                        
+                        // Correlation coefficient below the graph
+                        let bottomY = graphY + graphHeight + 60;
+                        ctx.font = 'bold 36px Arial';
+                        ctx.fillText(`Correlation: ${(Math.abs(currentCorrelation.correlation) * 100).toFixed(1)}%`, canvas.width / 2, bottomY);
+                        
+                        // Variables
+                        bottomY += 80;
+                        ctx.font = '30px Arial';
+                        ctx.fillText(`${currentCorrelation.series1_name}`, canvas.width / 2, bottomY);
+                        bottomY += 45;
+                        ctx.fillText('VS', canvas.width / 2, bottomY);
+                        bottomY += 45;
+                        ctx.fillText(`${currentCorrelation.series2_name}`, canvas.width / 2, bottomY);
+                        
+                        // Chartastrophe logo/signature at bottom
+                        ctx.font = '24px Arial';
+                        ctx.fillText('📊 Chartastrophe - chartastrophe.com', canvas.width / 2, canvas.height - 40);
+                        
+                        // Download the final image
+                        canvas.toBlob(function(blob) {
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = 'chartastrophe-correlation.png';
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                            
+                            alert('📸 Image with graph downloaded! Ready for Instagram! 🎉');
+                        }, 'image/png');
+                    };
+                    
+                    plotImg.onerror = function() {
+                        console.error('Failed to load plot image');
+                        // Fallback to text-only version
+                        generateTextOnlyInstagramImage(canvas, ctx, currentCorrelation);
+                    };
+                    
+                    plotImg.src = plotlyImage;
+                    
+                } catch (error) {
+                    console.error('Instagram image generation error:', error);
+                    // Fallback to text-only version
+                    generateTextOnlyInstagramImage();
+                }
+            }
+        });
+        
+        function generateTextOnlyInstagramImage(canvas = null, ctx = null, correlation = null) {
+            const finalCanvas = canvas || document.createElement('canvas');
+            const finalCtx = ctx || finalCanvas.getContext('2d');
+            
+            if (!canvas) {
+                finalCanvas.width = 1080;
+                finalCanvas.height = 1080;
+                
+                // Gradient background
+                const gradient = finalCtx.createLinearGradient(0, 0, 0, finalCanvas.height);
+                gradient.addColorStop(0, '#667eea');
+                gradient.addColorStop(1, '#764ba2');
+                finalCtx.fillStyle = gradient;
+                finalCtx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+            }
+            
+            const data = correlation || currentCorrelation;
+            
+            // White text
+            finalCtx.fillStyle = 'white';
+            finalCtx.textAlign = 'center';
+            
+            // Title
+            finalCtx.font = 'bold 48px Arial';
+            const lines = wrapText(finalCtx, data.title, finalCanvas.width - 100);
+            let y = 200;
+            lines.forEach(line => {
+                finalCtx.fillText(line, finalCanvas.width / 2, y);
+                y += 60;
+            });
+            
+            // Correlation info
+            y += 100;
+            finalCtx.font = '36px Arial';
+            finalCtx.fillText(`Correlation: ${(Math.abs(data.correlation) * 100).toFixed(1)}%`, finalCanvas.width / 2, y);
+            
+            // Variables
+            y += 120;
+            finalCtx.font = '32px Arial';
+            finalCtx.fillText(data.series1_name, finalCanvas.width / 2, y);
+            y += 60;
+            finalCtx.fillText('VS', finalCanvas.width / 2, y);
+            y += 60;
+            finalCtx.fillText(data.series2_name, finalCanvas.width / 2, y);
+            
+            // Message about graph
+            y += 120;
+            finalCtx.font = '28px Arial';
+            finalCtx.fillText('📊 Full interactive graph available at:', finalCanvas.width / 2, y);
+            y += 50;
+            finalCtx.fillText('chartastrophe.com', finalCanvas.width / 2, y);
+            
+            // Download
+            finalCanvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'chartastrophe-correlation-text.png';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                alert('📸 Text version downloaded! Visit the site for the full interactive graph.');
+            }, 'image/png');
+        }
+
+        function getRandomScientificExplanation() {
+            const explanations = [
+                "Our entire team consisting of one 'statistician-ish' person discovered that these variables share the same cosmic frequency wavelength.",
+                "Thanks to our pedal-powered supercomputer, we have finally proven that correlation definitely equals causation in this case.",
+                "After extensive analysis using our patented Magic 8-Ball methodology, we confirmed this relationship with 110% confidence.",
+                "Our laboratory hamsters running on wheels generated enough computational power to reveal this groundbreaking connection.",
+                "Using advanced tea leaf reading techniques combined with rigorous coin flipping, we established this scientific fact.",
+                "Our team of zero PhD students spent exactly 3.7 minutes discovering this phenomenon using Excel's random function.",
+                "After consulting our resident office cat (Dr. Whiskers), we determined this correlation is purr-fectly scientific.",
+                "Our state-of-the-art dartboard algorithm conclusively proved this relationship exists in at least one parallel universe.",
+                "Following the ancient art of connecting random dots, our research indicates these variables are cosmically linked.",
+                "Our quantum-powered random number generator (two dice) revealed this correlation with astounding precision.",
+                "Using breakthrough technology (a broken calculator), we've mathematically proven this connection is 'probably maybe' real.",
+                "After extensive peer review by our office plant, we can confirm this correlation is botanically sound.",
+                "Our interdisciplinary team of procrastinating graduate students stumbled upon this discovery during a coffee break.",
+                "Through rigorous application of the 'close enough' principle, we've established this relationship with scientific-ish accuracy.",
+                "Our machine learning algorithm (actually just pattern recognition by staring really hard) identified this connection.",
+                "Using advanced statistical methods learned from fortune cookies, we've validated this correlation beyond reasonable doubt.",
+                "Our peer-reviewed study (we asked our neighbor) confirms these variables are definitely, probably, maybe related.",
+                "After applying the sophisticated 'trust me bro' methodology, we can assert this correlation is scientifically sound.",
+                "Our Nobel Prize-worthy research (still waiting for the call) has uncovered this fundamental law of the universe.",
+                "Following extensive analysis using our proprietary 'guess and check' algorithm, we've proven this relationship exists.",
+                "Our team of highly trained rubber ducks debugged reality and found this correlation hidden in the matrix.",
+                "Using cutting-edge technology (a Magic 8-Ball app), we've determined this connection is 'outlook good'.",
+                "After consulting the Oracle of Wikipedia, we can scientifically confirm this correlation is 'citation needed' level accurate.",
+                "Our breakthrough research using the 'shotgun approach' methodology hit this correlation on the 47th try.",
+                "Through rigorous application of Murphy's Law, we discovered that if these variables can be correlated, they will be.",
+                "Our team of caffeinated undergrads powered by energy drinks has mathematically proven this relationship exists.",
+                "Using advanced statistical techniques learned from YouTube tutorials, we've established this correlation with confidence.",
+                "After extensive field research (googling for 5 minutes), we can confirm this relationship is scientifically plausible.",
+                "Our laboratory equipment (a laptop and strong WiFi) has revealed this correlation through quantum entanglement.",
+                "Following the sacred traditions of 'fake it till you make it', we've scientifically validated this connection.",
+                "Our peer-reviewed methodology (we asked ChatGPT) confirms this correlation exists in the realm of statistical possibility.",
+                "Using breakthrough analysis powered by sheer optimism, we've discovered this relationship defies conventional logic.",
+                "Our team of overqualified interns has proven this correlation using the ancient art of statistical hopscotch.",
+                "After applying the revolutionary 'YOLO statistics' approach, we can confirm this relationship is mathematically groovy.",
+                "Our quantum computer simulation (Excel with extra formulas) has revealed this correlation across multiple dimensions.",
+                "Following extensive research using our patented 'throw spaghetti at the wall' method, this correlation stuck.",
+                "Our interdisciplinary team of pizza-fueled researchers has unlocked this fundamental truth of the universe.",
+                "Using advanced AI (Artificial Ignorance), we've determined this correlation exists with maximum uncertainty.",
+                "After consulting our Magic Conch Shell, we can scientifically confirm the answer is 'maybe' with high probability.",
+                "Our laboratory breakthrough using the 'close your eyes and point' technique has identified this significant relationship."
+            ];
+            return explanations[Math.floor(Math.random() * explanations.length)];
+        }
+
+        function updateCorrelationTitle(title, series1_name, series2_name) {
+            const titleElement = document.getElementById('correlationTitle');
+            console.log('📊 Formatting title:', title);
+            console.log('🔵 Variable 1:', series1_name);
+            console.log('🟣 Variable 2:', series2_name);
+            
+            // Keywords that separate the two variables in titles (ordered by specificity)
+            const separators = [
+                'correlated with', 'synchronized with', 'linked to', 'connected to',
+                'evolve in concert', 'influences', 'affects', 'predicts', 
+                ' → ', ' and ', ' with ', ' vs ', 'reveals:', 'between'
+            ];
+            
+            // Special handling for the "evolve in concert" pattern
+            if (title.toLowerCase().includes('evolve in concert')) {
+                handleConcertPattern(title, titleElement, series1_name, series2_name);
+                return;
+            }
+            
+            // Find the separator in the title
+            let foundSeparator = null;
+            let separatorIndex = -1;
+            
+            for (const sep of separators) {
+                const index = title.toLowerCase().indexOf(sep);
+                if (index !== -1) {
+                    foundSeparator = sep;
+                    separatorIndex = index;
+                    break;
+                }
+            }
+            
+            if (foundSeparator && separatorIndex !== -1) {
+                // Special handling for "between X and Y" pattern
+                if (foundSeparator === 'between' || title.toLowerCase().includes('between')) {
+                    handleBetweenPattern(title, titleElement, series1_name, series2_name);
+                } else {
+                    // Standard pattern: "X separator Y"
+                    const beforeSep = title.substring(0, separatorIndex).trim();
+                    const separator = title.substring(separatorIndex, separatorIndex + foundSeparator.length);
+                    const afterSep = title.substring(separatorIndex + foundSeparator.length).trim();
+                    
+                    let var1Highlighted = highlightInText(beforeSep, series1_name, series2_name);
+                    let var2Highlighted = highlightInText(afterSep, series1_name, series2_name);
+                    
+                    // If no specific match, use different colors for each part
+                    if (var1Highlighted === beforeSep && var2Highlighted === afterSep) {
+                        var1Highlighted = `<span style="color: #667eea; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${beforeSep}</span>`;
+                        var2Highlighted = `<span style="color: #764ba2; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${afterSep}</span>`;
+                    }
+                    
+                    titleElement.innerHTML = `${var1Highlighted} <span style="color: #2d3436; font-weight: 500; margin: 0 4px;">${separator}</span> ${var2Highlighted}`;
+                }
+            } else {
+                // Fallback: try to highlight variable names if they appear anywhere
+                let highlightedTitle = title;
+                const var1Lower = series1_name.toLowerCase();
+                const var2Lower = series2_name.toLowerCase();
+                
+                if (title.toLowerCase().includes(var1Lower)) {
+                    highlightedTitle = highlightVariable(highlightedTitle, var1Lower, '#667eea');
+                }
+                if (title.toLowerCase().includes(var2Lower)) {
+                    highlightedTitle = highlightVariable(highlightedTitle, var2Lower, '#764ba2');
+                }
+                
+                if (highlightedTitle !== title) {
+                    titleElement.innerHTML = highlightedTitle;
+                } else {
+                    // Apply default styling for titles without specific patterns
+                    titleElement.innerHTML = `<span style="color: #2d3436; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${title}</span>`;
+                }
+            }
+        }
+        
+        function handleConcertPattern(title, titleElement, series1_name, series2_name) {
+            // Special handling for "evolve in concert" pattern
+            const concertIndex = title.toLowerCase().indexOf('evolve in concert');
+            if (concertIndex !== -1) {
+                const beforeConcert = title.substring(0, concertIndex).trim();
+                const afterConcert = title.substring(concertIndex + 17).trim(); // 17 = length of "evolve in concert"
+                
+                // Highlight variables with improved styling
+                let var1Highlighted = highlightInText(beforeConcert, series1_name, series2_name);
+                let var2Highlighted = highlightInText(afterConcert, series1_name, series2_name);
+                
+                // If no specific match found, assign different colors
+                if (var1Highlighted === beforeConcert && var2Highlighted === afterConcert) {
+                    var1Highlighted = `<span style="color: #667eea; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${beforeConcert}</span>`;
+                    var2Highlighted = `<span style="color: #764ba2; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${afterConcert}</span>`;
+                }
+                
+                titleElement.innerHTML = `${var1Highlighted} <span style="color: #e74c3c; font-weight: 700; font-style: italic; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">evolve in concert</span> ${var2Highlighted}`;
+            } else {
+                // Fallback
+                titleElement.innerHTML = `<span style="color: #2d3436; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${title}</span>`;
+            }
+        }
+        
+        function highlightVariable(text, variableName, color) {
+            // Case-insensitive replacement while preserving original case
+            const regex = new RegExp(`(${variableName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            return text.replace(regex, `<span style="color: ${color}; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">$1</span>`);
+        }
+        
+        function highlightInText(text, series1_name, series2_name) {
+            const var1Lower = series1_name.toLowerCase();
+            const var2Lower = series2_name.toLowerCase();
+            
+            if (text.toLowerCase().includes(var1Lower)) {
+                return highlightVariable(text, var1Lower, '#667eea');
+            } else if (text.toLowerCase().includes(var2Lower)) {
+                return highlightVariable(text, var2Lower, '#764ba2');
+            }
+            return text;
+        }
+        
+        function handleBetweenPattern(title, titleElement, series1_name, series2_name) {
+            // Pattern: "... between X and Y" or "X and Y ..."
+            const andIndex = title.toLowerCase().indexOf(' and ');
+            if (andIndex !== -1) {
+                const beforeAnd = title.substring(0, andIndex);
+                const afterAnd = title.substring(andIndex + 5); // 5 = length of " and "
+                
+                // Find which part contains which variable
+                let var1Highlighted = highlightInText(beforeAnd, series1_name, series2_name);
+                let var2Highlighted = highlightInText(afterAnd, series1_name, series2_name);
+                
+                // If no match found, assign colors arbitrarily
+                if (var1Highlighted === beforeAnd && var2Highlighted === afterAnd) {
+                    const betweenIndex = title.toLowerCase().indexOf('between');
+                    if (betweenIndex !== -1) {
+                        const prefix = title.substring(0, betweenIndex + 7); // Include "between"
+                        const rest = title.substring(betweenIndex + 8);
+                        const parts = rest.split(' and ');
+                        if (parts.length === 2) {
+                            var1Highlighted = `<span style="color: #667eea; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${parts[0].trim()}</span>`;
+                            var2Highlighted = `<span style="color: #764ba2; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${parts[1].trim()}</span>`;
+                            titleElement.innerHTML = `${prefix} ${var1Highlighted} <span style="color: #2d3436; font-weight: 500; margin: 0 4px;">and</span> ${var2Highlighted}`;
+                            return;
+                        }
+                    }
+                }
+                
+                titleElement.innerHTML = `${var1Highlighted} <span style="color: #2d3436; font-weight: 500; margin: 0 4px;">and</span> ${var2Highlighted}`;
+            } else {
+                // Fallback for complex "between" patterns
+                titleElement.textContent = title;
+            }
+        }
+
+        function wrapText(ctx, text, maxWidth) {
+            const words = text.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+            
+            for (let i = 1; i < words.length; i++) {
+                const word = words[i];
+                const width = ctx.measureText(currentLine + ' ' + word).width;
+                if (width < maxWidth) {
+                    currentLine += ' ' + word;
+                } else {
+                    lines.push(currentLine);
+                    currentLine = word;
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        // Feedback handlers
+        document.getElementById('feedbackFunny').addEventListener('click', () => {
+            submitFeedback('funny');
+        });
+
+        document.getElementById('feedbackMild').addEventListener('click', () => {
+            submitFeedback('mild');
+        });
+
+        document.getElementById('feedbackBoring').addEventListener('click', () => {
+            submitFeedback('boring');
+        });
+
+        async function submitFeedback(rating) {
+            if (!currentCorrelation) return;
+
+            try {
+                // Disable buttons during submission
+                document.getElementById('feedbackFunny').disabled = true;
+                document.getElementById('feedbackMild').disabled = true;
+                document.getElementById('feedbackBoring').disabled = true;
+
+                const response = await fetch('/api/feedback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        correlation_id: currentCorrelation.correlation_id,
+                        rating: rating,
+                        series1_name: currentCorrelation.series1_name,
+                        series2_name: currentCorrelation.series2_name
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    showFeedbackMessage(
+                        rating === 'funny' ? 
+                        '😂 Thanks! This correlation will help generate funnier ones!' : 
+                        rating === 'mild' ? 
+                        '👍 Thanks for your feedback! We\'ll try to do better.' : 
+                        '👍 Thanks for your feedback! We\'ll try to do better.',
+                        'success'
+                    );
+                } else {
+                    showFeedbackMessage('❌ Error recording feedback', 'error');
+                }
+
+            } catch (error) {
+                console.error('Feedback error:', error);
+                showFeedbackMessage('❌ Error recording feedback', 'error');
+            }
+        }
+
+        function showFeedbackMessage(message, type) {
+            const messageDiv = document.getElementById('feedbackMessage');
+            messageDiv.textContent = message;
+            messageDiv.className = `feedback-message feedback-${type}`;
+            messageDiv.style.display = 'block';
+
+            // Hide message after 3 seconds
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        function resetFeedbackButtons() {
+            // Re-enable buttons for new correlation
+            document.getElementById('feedbackFunny').disabled = false;
+            document.getElementById('feedbackMild').disabled = false;
+            document.getElementById('feedbackBoring').disabled = false;
+            document.getElementById('feedbackMessage').style.display = 'none';
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

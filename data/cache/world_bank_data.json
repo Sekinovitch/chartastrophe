@@ -1,0 +1,722 @@
+[
+  {
+    "name": "World Bank - PIB",
+    "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2024",
+      "value": null,
+      "indicator_name": "PIB"
+    }
+  },
+  {
+    "name": "World Bank - PIB",
+    "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2023",
+      "value": 3051831611384.76,
+      "indicator_name": "PIB"
+    }
+  },
+  {
+    "name": "World Bank - PIB",
+    "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2022",
+      "value": 2796302210398.84,
+      "indicator_name": "PIB"
+    }
+  },
+  {
+    "name": "World Bank - PIB",
+    "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2021",
+      "value": 2966433692008.09,
+      "indicator_name": "PIB"
+    }
+  },
+  {
+    "name": "World Bank - PIB",
+    "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2020",
+      "value": 2647926055110.05,
+      "indicator_name": "PIB"
+    }
+  },
+  {
+    "name": "World Bank - PIB",
+    "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2019",
+      "value": 2722793515171.76,
+      "indicator_name": "PIB"
+    }
+  },
+  {
+    "name": "World Bank - PIB",
+    "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2018",
+      "value": 2781576320884.39,
+      "indicator_name": "PIB"
+    }
+  },
+  {
+    "name": "World Bank - PIB",
+    "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2017",
+      "value": 2588868323334.71,
+      "indicator_name": "PIB"
+    }
+  },
+  {
+    "name": "World Bank - PIB",
+    "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2016",
+      "value": 2470407619777.13,
+      "indicator_name": "PIB"
+    }
+  },
+  {
+    "name": "World Bank - PIB",
+    "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2015",
+      "value": 2442483452642.5,
+      "indicator_name": "PIB"
+    }
+  },
+  {
+    "name": "World Bank - PIB",
+    "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2014",
+      "value": 2861236112552.42,
+      "indicator_name": "PIB"
+    }
+  },
+  {
+    "name": "World Bank - PIB",
+    "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2013",
+      "value": 2816077607875.26,
+      "indicator_name": "PIB"
+    }
+  },
+  {
+    "name": "World Bank - PIB",
+    "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2012",
+      "value": 2683007095787.23,
+      "indicator_name": "PIB"
+    }
+  },
+  {
+    "name": "World Bank - PIB",
+    "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2011",
+      "value": 2870408553990.28,
+      "indicator_name": "PIB"
+    }
+  },
+  {
+    "name": "World Bank - PIB",
+    "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2010",
+      "value": 2646230027988.34,
+      "indicator_name": "PIB"
+    }
+  },
+  {
+    "name": "World Bank - Population",
+    "url": "https://data.worldbank.org/indicator/SP.POP.TOTL",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2024",
+      "value": null,
+      "indicator_name": "Population"
+    }
+  },
+  {
+    "name": "World Bank - Population",
+    "url": "https://data.worldbank.org/indicator/SP.POP.TOTL",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2023",
+      "value": 68287487,
+      "indicator_name": "Population"
+    }
+  },
+  {
+    "name": "World Bank - Population",
+    "url": "https://data.worldbank.org/indicator/SP.POP.TOTL",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2022",
+      "value": 68065015,
+      "indicator_name": "Population"
+    }
+  },
+  {
+    "name": "World Bank - Population",
+    "url": "https://data.worldbank.org/indicator/SP.POP.TOTL",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2021",
+      "value": 67842811,
+      "indicator_name": "Population"
+    }
+  },
+  {
+    "name": "World Bank - Population",
+    "url": "https://data.worldbank.org/indicator/SP.POP.TOTL",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2020",
+      "value": 67601110,
+      "indicator_name": "Population"
+    }
+  },
+  {
+    "name": "World Bank - Population",
+    "url": "https://data.worldbank.org/indicator/SP.POP.TOTL",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2019",
+      "value": 67382061,
+      "indicator_name": "Population"
+    }
+  },
+  {
+    "name": "World Bank - Population",
+    "url": "https://data.worldbank.org/indicator/SP.POP.TOTL",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2018",
+      "value": 67158348,
+      "indicator_name": "Population"
+    }
+  },
+  {
+    "name": "World Bank - Population",
+    "url": "https://data.worldbank.org/indicator/SP.POP.TOTL",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2017",
+      "value": 66918020,
+      "indicator_name": "Population"
+    }
+  },
+  {
+    "name": "World Bank - Population",
+    "url": "https://data.worldbank.org/indicator/SP.POP.TOTL",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2016",
+      "value": 66724104,
+      "indicator_name": "Population"
+    }
+  },
+  {
+    "name": "World Bank - Population",
+    "url": "https://data.worldbank.org/indicator/SP.POP.TOTL",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2015",
+      "value": 66548272,
+      "indicator_name": "Population"
+    }
+  },
+  {
+    "name": "World Bank - Population",
+    "url": "https://data.worldbank.org/indicator/SP.POP.TOTL",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2014",
+      "value": 66312067,
+      "indicator_name": "Population"
+    }
+  },
+  {
+    "name": "World Bank - Population",
+    "url": "https://data.worldbank.org/indicator/SP.POP.TOTL",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2013",
+      "value": 65997932,
+      "indicator_name": "Population"
+    }
+  },
+  {
+    "name": "World Bank - Population",
+    "url": "https://data.worldbank.org/indicator/SP.POP.TOTL",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2012",
+      "value": 65657659,
+      "indicator_name": "Population"
+    }
+  },
+  {
+    "name": "World Bank - Population",
+    "url": "https://data.worldbank.org/indicator/SP.POP.TOTL",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2011",
+      "value": 65340830,
+      "indicator_name": "Population"
+    }
+  },
+  {
+    "name": "World Bank - Population",
+    "url": "https://data.worldbank.org/indicator/SP.POP.TOTL",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2010",
+      "value": 65026211,
+      "indicator_name": "Population"
+    }
+  },
+  {
+    "name": "World Bank - Dépenses éducation",
+    "url": "https://data.worldbank.org/indicator/SE.XPD.TOTL.GD.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2024",
+      "value": null,
+      "indicator_name": "Dépenses éducation"
+    }
+  },
+  {
+    "name": "World Bank - Dépenses éducation",
+    "url": "https://data.worldbank.org/indicator/SE.XPD.TOTL.GD.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2023",
+      "value": null,
+      "indicator_name": "Dépenses éducation"
+    }
+  },
+  {
+    "name": "World Bank - Dépenses éducation",
+    "url": "https://data.worldbank.org/indicator/SE.XPD.TOTL.GD.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2022",
+      "value": null,
+      "indicator_name": "Dépenses éducation"
+    }
+  },
+  {
+    "name": "World Bank - Dépenses éducation",
+    "url": "https://data.worldbank.org/indicator/SE.XPD.TOTL.GD.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2021",
+      "value": 5.43038988113403,
+      "indicator_name": "Dépenses éducation"
+    }
+  },
+  {
+    "name": "World Bank - Dépenses éducation",
+    "url": "https://data.worldbank.org/indicator/SE.XPD.TOTL.GD.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2020",
+      "value": 5.65981006622314,
+      "indicator_name": "Dépenses éducation"
+    }
+  },
+  {
+    "name": "World Bank - Dépenses éducation",
+    "url": "https://data.worldbank.org/indicator/SE.XPD.TOTL.GD.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2019",
+      "value": 5.35443019866943,
+      "indicator_name": "Dépenses éducation"
+    }
+  },
+  {
+    "name": "World Bank - Dépenses éducation",
+    "url": "https://data.worldbank.org/indicator/SE.XPD.TOTL.GD.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2018",
+      "value": 5.40716981887817,
+      "indicator_name": "Dépenses éducation"
+    }
+  },
+  {
+    "name": "World Bank - Dépenses éducation",
+    "url": "https://data.worldbank.org/indicator/SE.XPD.TOTL.GD.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2017",
+      "value": 5.45160007476807,
+      "indicator_name": "Dépenses éducation"
+    }
+  },
+  {
+    "name": "World Bank - Dépenses éducation",
+    "url": "https://data.worldbank.org/indicator/SE.XPD.TOTL.GD.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2016",
+      "value": 5.40805816650391,
+      "indicator_name": "Dépenses éducation"
+    }
+  },
+  {
+    "name": "World Bank - Dépenses éducation",
+    "url": "https://data.worldbank.org/indicator/SE.XPD.TOTL.GD.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2015",
+      "value": 5.44642734527588,
+      "indicator_name": "Dépenses éducation"
+    }
+  },
+  {
+    "name": "World Bank - Dépenses éducation",
+    "url": "https://data.worldbank.org/indicator/SE.XPD.TOTL.GD.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2014",
+      "value": 5.48920440673828,
+      "indicator_name": "Dépenses éducation"
+    }
+  },
+  {
+    "name": "World Bank - Dépenses éducation",
+    "url": "https://data.worldbank.org/indicator/SE.XPD.TOTL.GD.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2013",
+      "value": 5.4928936958313,
+      "indicator_name": "Dépenses éducation"
+    }
+  },
+  {
+    "name": "World Bank - Dépenses éducation",
+    "url": "https://data.worldbank.org/indicator/SE.XPD.TOTL.GD.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2012",
+      "value": 5.48835611343384,
+      "indicator_name": "Dépenses éducation"
+    }
+  },
+  {
+    "name": "World Bank - Dépenses éducation",
+    "url": "https://data.worldbank.org/indicator/SE.XPD.TOTL.GD.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2011",
+      "value": 5.48011541366577,
+      "indicator_name": "Dépenses éducation"
+    }
+  },
+  {
+    "name": "World Bank - Dépenses éducation",
+    "url": "https://data.worldbank.org/indicator/SE.XPD.TOTL.GD.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2010",
+      "value": 5.64279174804688,
+      "indicator_name": "Dépenses éducation"
+    }
+  },
+  {
+    "name": "World Bank - Taux de chômage",
+    "url": "https://data.worldbank.org/indicator/SL.UEM.TOTL.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2024",
+      "value": 7.37,
+      "indicator_name": "Taux de chômage"
+    }
+  },
+  {
+    "name": "World Bank - Taux de chômage",
+    "url": "https://data.worldbank.org/indicator/SL.UEM.TOTL.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2023",
+      "value": 7.335,
+      "indicator_name": "Taux de chômage"
+    }
+  },
+  {
+    "name": "World Bank - Taux de chômage",
+    "url": "https://data.worldbank.org/indicator/SL.UEM.TOTL.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2022",
+      "value": 7.308,
+      "indicator_name": "Taux de chômage"
+    }
+  },
+  {
+    "name": "World Bank - Taux de chômage",
+    "url": "https://data.worldbank.org/indicator/SL.UEM.TOTL.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2021",
+      "value": 7.874,
+      "indicator_name": "Taux de chômage"
+    }
+  },
+  {
+    "name": "World Bank - Taux de chômage",
+    "url": "https://data.worldbank.org/indicator/SL.UEM.TOTL.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2020",
+      "value": 8.009,
+      "indicator_name": "Taux de chômage"
+    }
+  },
+  {
+    "name": "World Bank - Taux de chômage",
+    "url": "https://data.worldbank.org/indicator/SL.UEM.TOTL.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2019",
+      "value": 8.415,
+      "indicator_name": "Taux de chômage"
+    }
+  },
+  {
+    "name": "World Bank - Taux de chômage",
+    "url": "https://data.worldbank.org/indicator/SL.UEM.TOTL.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2018",
+      "value": 9.018,
+      "indicator_name": "Taux de chômage"
+    }
+  },
+  {
+    "name": "World Bank - Taux de chômage",
+    "url": "https://data.worldbank.org/indicator/SL.UEM.TOTL.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2017",
+      "value": 9.409,
+      "indicator_name": "Taux de chômage"
+    }
+  },
+  {
+    "name": "World Bank - Taux de chômage",
+    "url": "https://data.worldbank.org/indicator/SL.UEM.TOTL.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2016",
+      "value": 10.057,
+      "indicator_name": "Taux de chômage"
+    }
+  },
+  {
+    "name": "World Bank - Taux de chômage",
+    "url": "https://data.worldbank.org/indicator/SL.UEM.TOTL.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2015",
+      "value": 10.354,
+      "indicator_name": "Taux de chômage"
+    }
+  },
+  {
+    "name": "World Bank - Taux de chômage",
+    "url": "https://data.worldbank.org/indicator/SL.UEM.TOTL.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2014",
+      "value": 10.273,
+      "indicator_name": "Taux de chômage"
+    }
+  },
+  {
+    "name": "World Bank - Taux de chômage",
+    "url": "https://data.worldbank.org/indicator/SL.UEM.TOTL.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2013",
+      "value": 9.913,
+      "indicator_name": "Taux de chômage"
+    }
+  },
+  {
+    "name": "World Bank - Taux de chômage",
+    "url": "https://data.worldbank.org/indicator/SL.UEM.TOTL.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2012",
+      "value": 9.841,
+      "indicator_name": "Taux de chômage"
+    }
+  },
+  {
+    "name": "World Bank - Taux de chômage",
+    "url": "https://data.worldbank.org/indicator/SL.UEM.TOTL.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2011",
+      "value": 9.228,
+      "indicator_name": "Taux de chômage"
+    }
+  },
+  {
+    "name": "World Bank - Taux de chômage",
+    "url": "https://data.worldbank.org/indicator/SL.UEM.TOTL.ZS",
+    "category": "economie",
+    "source": "world_bank",
+    "metadata": {
+      "country": "France",
+      "date": "2010",
+      "value": 9.279,
+      "indicator_name": "Taux de chômage"
+    }
+  }
+]

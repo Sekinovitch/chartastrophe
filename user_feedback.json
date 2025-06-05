@@ -1,0 +1,54 @@
+{
+  "correlations": {
+    "5e5a0300-b8fe-4f87-b0a5-5f92a2d92349": {
+      "rating": "mild",
+      "timestamp": "2025-06-05T12:01:53.152502",
+      "series": [
+        "Ventes de glaces (millions)",
+        "Ventes de déguisements Halloween"
+      ]
+    },
+    "3ff23371-34ff-423d-9578-d55763fff77b": {
+      "rating": "boring",
+      "timestamp": "2025-06-05T12:02:11.937929",
+      "series": [
+        "Population totale",
+        "Ventes de déguisements Halloween"
+      ]
+    },
+    "8814e4ea-1a33-4c50-a54f-13f651d3867b": {
+      "rating": "mild",
+      "timestamp": "2025-06-05T12:02:44.373252",
+      "series": [
+        "PIB par habitant (USD)",
+        "Ventes de parapluies (milliers)"
+      ]
+    },
+    "52cd5aed-8c91-4eef-8225-04a332a7355b": {
+      "rating": "boring",
+      "timestamp": "2025-06-05T12:03:50.297013",
+      "series": [
+        "PIB par habitant (USD)",
+        "Nombre de selfies pris"
+      ]
+    }
+  },
+  "dataset_scores": {
+    "Ventes de glaces (millions)": 0.5,
+    "Ventes de déguisements Halloween": 0.0,
+    "Population totale": -0.5,
+    "PIB par habitant (USD)": 0.0,
+    "Ventes de parapluies (milliers)": 0.5,
+    "Nombre de selfies pris": -0.5
+  },
+  "combination_scores": {
+    "Ventes de glaces (millions)|Ventes de déguisements Halloween": 0.5,
+    "Ventes de déguisements Halloween|Ventes de glaces (millions)": 0.5,
+    "Population totale|Ventes de déguisements Halloween": -0.5,
+    "Ventes de déguisements Halloween|Population totale": -0.5,
+    "PIB par habitant (USD)|Ventes de parapluies (milliers)": 0.5,
+    "Ventes de parapluies (milliers)|PIB par habitant (USD)": 0.5,
+    "PIB par habitant (USD)|Nombre de selfies pris": -0.5,
+    "Nombre de selfies pris|PIB par habitant (USD)": -0.5
+  }
+}

@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+
+{% block title %}Shared Correlation{% endblock %}
+
+{% block content %}
+<div class="scientific-paper">
+    <h1 id="correlation-title" class="correlation-title text-center mb-4"></h1>
+    
+    <div class="row">
+        <div class="col-12">
+            <div id="correlation-plot" style="height: 500px;"></div>
+        </div>
+    </div>
+
+    <div class="correlation-explanation mt-4 p-4">
+        <p id="correlation-explanation" class="mb-0"></p>
+    </div>
+
+    <div class="correlation-stats mt-4">
+        <div class="row text-center">
+            <div class="col-md-6">
+                <div class="stat-card p-3 bg-light rounded">
+                    <h3 class="stat-title">Correlation Strength</h3>
+                    <div id="correlation-score" class="stat-value display-4"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="stat-card p-3 bg-light rounded">
+                    <h3 class="stat-title">Coefficient of Determination (R²)</h3>
+                    <div id="r-squared" class="stat-value display-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sources-section mt-4">
+        <div class="text-center mb-3">
+            <button class="btn btn-outline-primary" onclick="toggleSources()">
+                <span class="sources-toggle-text">Show sources</span>
+            </button>
+        </div>
+        <div id="sources-section" class="sources-content" style="display: none;">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title mb-3">Data Sources</h3>
+                    <div id="sources-list" class="list-group"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function toggleSources() {
+        const sourcesSection = document.getElementById('sources-section');
+        const toggleButton = document.querySelector('.sources-toggle-text');
+        
+        if (sourcesSection.style.display === 'none') {
+            sourcesSection.style.display = 'block';
+            toggleButton.textContent = 'Hide sources';
+        } else {
+            sourcesSection.style.display = 'none';
+            toggleButton.textContent = 'Show sources';
+        }
+    }
+
+    function displaySources(sources) {
+        const sourcesList = document.getElementById('sources-list');
+        sourcesList.innerHTML = '';
+        
+        sources.forEach(source => {
+            const sourceItem = document.createElement('div');
+            sourceItem.className = 'list-group-item';
+            sourceItem.innerHTML = `
+                <h5 class="mb-1">${source.name}</h5>
+                ${source.url ? `<a href="${source.url}" target="_blank" class="text-primary">${source.url}</a>` : ''}
+            `;
+            sourcesList.appendChild(sourceItem);
+        });
+    }
+
+    function displayCorrelation(correlation) {
+        // Update title and explanation
+        document.getElementById('correlation-title').textContent = correlation.title;
+        document.getElementById('correlation-explanation').textContent = correlation.explanation;
+        
+        // Update scores
+        document.getElementById('correlation-score').textContent = 
+            `${Math.abs(correlation.correlation * 100).toFixed(1)}%`;
+        document.getElementById('r-squared').textContent = 
+            (correlation.correlation ** 2).toFixed(3);
+
+        // Generate correlation curve
+        const correlation_coeff = correlation.correlation;
+        const N = 100;
+        const x = correlation.data_x || [];
+        const y = correlation.data_y || [];
+        
+        if (x.length === 0 || y.length === 0) {
+            console.warn('No data available for correlation');
+            return;
+        }
+
+        // Sort data by X for curve display
+        const sortedData = x.map((xVal, i) => ({ x: xVal, y: y[i] }))
+                           .sort((a, b) => a.x - b.x);
+        
+        const sortedX = sortedData.map(d => d.x);
+        const sortedY = sortedData.map(d => d.y);
+
+        // Calculate linear regression
+        const n = x.length;
+        const sumX = x.reduce((a, b) => a + b, 0);
+        const sumY = y.reduce((a, b) => a + b, 0);
+        const sumXY = x.reduce((acc, xVal, i) => acc + xVal * y[i], 0);
+        const sumXX = x.reduce((acc, xVal) => acc + xVal * xVal, 0);
+
+        const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+        const intercept = (sumY - slope * sumX) / n;
+
+        // Generate polynomial curve for display
+        const xMin = Math.min(...x);
+        const xMax = Math.max(...x);
+        const xRange = xMax - xMin;
+        
+        const curveX = [];
+        const curveY = [];
+        
+        for (let i = 0; i <= N; i++) {
+            const xi = xMin + (i / N) * xRange;
+            const yi = slope * xi + intercept + 
+                      Math.sin(xi * 0.1) * correlation_coeff * 5 + 
+                      Math.cos(xi * 0.05) * correlation_coeff * 3;
+            curveX.push(xi);
+            curveY.push(yi);
+        }
+
+        // Value normalization for display
+        const formatValue = (value, originalValues) => {
+            const min = Math.min(...originalValues);
+            const max = Math.max(...originalValues);
+            const normalized = ((value - min) / (max - min)) * 100;
+            return normalized.toFixed(1) + '%';
+        };
+
+        const trace1 = {
+            x: x,
+            y: y,
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Data',
+            marker: {
+                size: 8,
+                color: '#6c5ce7',
+                opacity: 0.7
+            },
+            hovertemplate: `${correlation.series1_name}: %{text}<br>${correlation.series2_name}: %{y}<extra></extra>`,
+            text: x.map(val => formatValue(val, x))
+        };
+
+        const trace2 = {
+            x: [xMin, xMax],
+            y: [slope * xMin + intercept, slope * xMax + intercept],
+            mode: 'lines',
+            type: 'scatter',
+            name: 'Linear trend',
+            line: {
+                color: '#e74c3c',
+                width: 2,
+                dash: 'dot'
+            }
+        };
+
+        const trace3 = {
+            x: curveX,
+            y: curveY,
+            mode: 'lines',
+            type: 'scatter',
+            name: 'Correlation',
+            line: {
+                color: '#2ecc71',
+                width: 3
+            }
+        };
+
+        const layout = {
+            title: {
+                text: `${correlation.series1_name} vs ${correlation.series2_name}`,
+                font: { size: 16 }
+            },
+            xaxis: {
+                title: correlation.series1_name,
+                zeroline: false,
+                gridcolor: '#f8f9fa',
+                tickformat: '.0%',
+                ticktext: x.map(val => formatValue(val, x)),
+                tickvals: x
+            },
+            yaxis: {
+                title: correlation.series2_name,
+                zeroline: false,
+                gridcolor: '#f8f9fa',
+                tickformat: '.0%',
+                ticktext: y.map(val => formatValue(val, y)),
+                tickvals: y
+            },
+            plot_bgcolor: '#ffffff',
+            paper_bgcolor: '#ffffff',
+            showlegend: true,
+            legend: {
+                x: 0,
+                y: 1
+            },
+            hovermode: 'closest',
+            margin: { t: 50 }
+        };
+
+        Plotly.newPlot('correlation-plot', [trace1, trace2, trace3], layout, {responsive: true});
+
+        // Display sources if available
+        if (correlation.sources) {
+            displaySources(correlation.sources);
+        }
+    }
+
+    // Retrieve correlation
+    fetch(`/api/correlation/{{ correlation_id }}`)
+        .then(response => response.json())
+        .then(correlation => {
+            displayCorrelation(correlation);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+</script>
+{% endblock %} 
