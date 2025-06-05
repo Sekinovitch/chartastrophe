@@ -1,4 +1,4 @@
-# Ignore development files
+# Ignore absolutely everything that could cause issues
 venv_new/
 __pycache__/
 *.pyc
@@ -6,9 +6,13 @@ __pycache__/
 *.egg-info/
 .pytest_cache/
 .mypy_cache/
+node_modules/
+.env
+.env.*
 
 # Ignore data cache files
 data/cache/
+data/
 
 # Ignore logs
 *.log
@@ -17,9 +21,16 @@ chartastrophe.log
 # Ignore test files
 tests/
 
-# Ignore git
+# Ignore git and IDEs
 .git/
-
-# Ignore IDE files
 .vscode/
-.idea/ 
+.idea/
+
+# Ignore scripts that could trigger builds
+*.sh
+build/
+dist/
+Makefile
+setup.py
+setup.cfg
+pyproject.toml 
