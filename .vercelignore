@@ -1,0 +1,25 @@
+# Ignore development files
+venv_new/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Ignore data cache files
+data/cache/
+
+# Ignore logs
+*.log
+chartastrophe.log
+
+# Ignore test files
+tests/
+
+# Ignore git
+.git/
+
+# Ignore IDE files
+.vscode/
+.idea/ 
