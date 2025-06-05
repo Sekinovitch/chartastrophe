@@ -72,7 +72,7 @@ def get_massive_data_sources():
         'ensoleillement': {'url': 'https://donneespubliques.meteofrance.fr/donnees_libres/Txt/Climat/DCE_mensuel.csv', 'desc': 'Sunshine duration'},
         'humidite_air': {'url': 'https://donneespubliques.meteofrance.fr/donnees_libres/Txt/Climat/DCH_mensuel.csv', 'desc': 'Air humidity'},
     }
-    sources.update({f"gov_{k}": v for k, v in government_data.items()})
+    sources.update({f"gov_{k}": v for k, v in french_gov.items()})
     
     # UNION EUROPÉENNE - Eurostat (500+ datasets)
     eurostat = {
