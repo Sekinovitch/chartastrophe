@@ -8,7 +8,7 @@ import sys
 from src.web.app import create_app
 from src.config import SECURITY_CONFIG, PERFORMANCE_CONFIG, FLASK_CONFIG, get_env_config
 
-# Configuration du logging
+# Logging configuration
 try:
     logging.config.fileConfig('logging.conf')
 except FileNotFoundError:
@@ -25,7 +25,7 @@ def create_application():
     try:
         app = create_app()
         
-        # Configuration de sécurité
+        # Security configuration
         app.config.update(
             SESSION_COOKIE_SECURE=False,  # True in production with HTTPS
             SESSION_COOKIE_HTTPONLY=True,
@@ -44,11 +44,11 @@ def create_application():
         logger.error(f"Error creating application: {e}")
         sys.exit(1)
 
-# Création de l'application
+# Create the application
 app = create_application()
 
 if __name__ == '__main__':
-    # Configuration depuis les variables d'environnement
+    # Configuration from environment variables
     env_config = get_env_config()
     
     logger.info("🚀 Starting Chartastrophe server...")
