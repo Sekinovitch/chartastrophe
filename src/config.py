@@ -6,6 +6,10 @@ import logging
 import sys
 import os
 from typing import Dict, Any, List
+from dotenv import load_dotenv
+
+# Charger les variables d'environnement depuis le fichier .env
+load_dotenv()
 
 # ========================================
 # MAIN CONFIGURATION
@@ -142,6 +146,24 @@ API_CONFIG: Dict[str, Any] = {
     'backoff_factor': 0.3,          # Exponential backoff factor
     'user_agent': 'Chartastrophe/1.0 (Educational Purpose)',
     'rate_limit_delay': 1           # Delay between requests (seconds)
+}
+
+# ========================================
+# DEEPL TRANSLATION CONFIGURATION
+# ========================================
+
+DEEPL_CONFIG: Dict[str, Any] = {
+    # Pour utiliser DeepL, définissez votre clé API dans une variable d'environnement
+    # ou utilisez la version gratuite (limitée à 500 000 caractères/mois)
+    'api_key': os.environ.get('DEEPL_API_KEY', None),  # Clé API DeepL (optionnelle)
+    'use_free_api': True,           # Utiliser l'API gratuite si pas de clé
+    'source_lang': 'EN',            # Langue source (anglais)
+    'target_lang': 'FR',            # Langue cible (français)
+    'formality': 'default',         # Niveau de formalité (default, more, less)
+    'timeout': 5,                   # Timeout pour les requêtes DeepL
+    'max_retries': 2,               # Nombre de tentatives en cas d'échec
+    'fallback_to_dict': True,       # Utiliser le dictionnaire si DeepL échoue
+    'cache_translations': True      # Mettre en cache les traductions
 }
 
 # ========================================

@@ -22,7 +22,12 @@ def create_app() -> Flask:
     app.config.from_mapping(
         SECRET_KEY=os.getenv('FLASK_SECRET_KEY', 'dev-key-change-in-production'),
         CACHE_DIR=Path(os.getenv('CACHE_DIR', 'data/cache')),
-        CACHE_EXPIRATION=int(os.getenv('CACHE_EXPIRATION', 3600))
+        CACHE_EXPIRATION=int(os.getenv('CACHE_EXPIRATION', 3600)),
+        # Session configuration for language support
+        SESSION_COOKIE_SECURE=False,  # Set to True in production with HTTPS
+        SESSION_COOKIE_HTTPONLY=True,
+        SESSION_COOKIE_SAMESITE='Lax',
+        PERMANENT_SESSION_LIFETIME=86400  # 24 hours
     )
     
     # Configure template and static folders

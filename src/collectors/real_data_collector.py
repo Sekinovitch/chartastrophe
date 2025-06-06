@@ -17,6 +17,262 @@ from .open_data_sources import OpenDataSourcesCollector
 
 logger = logging.getLogger(__name__)
 
+# Dictionnaire de traduction pour les noms de datasets
+DATASET_TRANSLATIONS = {
+    # Mots clés communs
+    'data': {'fr': 'données', 'en': 'data'},
+    'statistics': {'fr': 'statistiques', 'en': 'statistics'},
+    'birth': {'fr': 'naissance', 'en': 'birth'},
+    'birth statistics': {'fr': 'statistiques de naissance', 'en': 'birth statistics'},
+    'trends': {'fr': 'tendances', 'en': 'trends'},
+    'analysis': {'fr': 'analyse', 'en': 'analysis'},
+    'papers': {'fr': 'articles', 'en': 'papers'},
+    'report': {'fr': 'rapport', 'en': 'report'},
+    'quantum computing': {'fr': 'informatique quantique', 'en': 'quantum computing'},
+    'oil': {'fr': 'pétrole', 'en': 'oil'},
+    'gas': {'fr': 'gaz', 'en': 'gas'},
+    'monitoring': {'fr': 'surveillance', 'en': 'monitoring'},
+    'indicators': {'fr': 'indicateurs', 'en': 'indicators'},
+    'activity': {'fr': 'activité', 'en': 'activity'},
+    'usage': {'fr': 'utilisation', 'en': 'usage'},
+    'patterns': {'fr': 'modèles', 'en': 'patterns'},
+    'growth': {'fr': 'croissance', 'en': 'growth'},
+    'changes': {'fr': 'changements', 'en': 'changes'},
+    'levels': {'fr': 'niveaux', 'en': 'levels'},
+    'measurements': {'fr': 'mesures', 'en': 'measurements'},
+    'observations': {'fr': 'observations', 'en': 'observations'},
+    'tracking': {'fr': 'suivi', 'en': 'tracking'},
+    'coverage': {'fr': 'couverture', 'en': 'coverage'},
+    'adoption': {'fr': 'adoption', 'en': 'adoption'},
+    'consumption': {'fr': 'consommation', 'en': 'consumption'},
+    'production': {'fr': 'production', 'en': 'production'},
+    'development': {'fr': 'développement', 'en': 'development'},
+    'performance': {'fr': 'performance', 'en': 'performance'},
+    'efficiency': {'fr': 'efficacité', 'en': 'efficiency'},
+    'quality': {'fr': 'qualité', 'en': 'quality'},
+    'safety': {'fr': 'sécurité', 'en': 'safety'},
+    'security': {'fr': 'sécurité', 'en': 'security'},
+    'access': {'fr': 'accès', 'en': 'access'},
+    'accessibility': {'fr': 'accessibilité', 'en': 'accessibility'},
+    'availability': {'fr': 'disponibilité', 'en': 'availability'},
+    'demographics': {'fr': 'démographie', 'en': 'demographics'},
+    'population': {'fr': 'population', 'en': 'population'},
+    'employment': {'fr': 'emploi', 'en': 'employment'},
+    'unemployment': {'fr': 'chômage', 'en': 'unemployment'},
+    'education': {'fr': 'éducation', 'en': 'education'},
+    'health': {'fr': 'santé', 'en': 'health'},
+    'healthcare': {'fr': 'soins de santé', 'en': 'healthcare'},
+    'housing': {'fr': 'logement', 'en': 'housing'},
+    'transportation': {'fr': 'transport', 'en': 'transportation'},
+    'transport': {'fr': 'transport', 'en': 'transport'},
+    'traffic': {'fr': 'trafic', 'en': 'traffic'},
+    'energy': {'fr': 'énergie', 'en': 'energy'},
+    'environment': {'fr': 'environnement', 'en': 'environment'},
+    'climate': {'fr': 'climat', 'en': 'climate'},
+    'weather': {'fr': 'météo', 'en': 'weather'},
+    'temperature': {'fr': 'température', 'en': 'temperature'},
+    'pollution': {'fr': 'pollution', 'en': 'pollution'},
+    'emissions': {'fr': 'émissions', 'en': 'emissions'},
+    'renewable': {'fr': 'renouvelable', 'en': 'renewable'},
+    'solar': {'fr': 'solaire', 'en': 'solar'},
+    'wind': {'fr': 'éolien', 'en': 'wind'},
+    'electric': {'fr': 'électrique', 'en': 'electric'},
+    'vehicle': {'fr': 'véhicule', 'en': 'vehicle'},
+    'technology': {'fr': 'technologie', 'en': 'technology'},
+    'digital': {'fr': 'numérique', 'en': 'digital'},
+    'internet': {'fr': 'internet', 'en': 'internet'},
+    'social media': {'fr': 'réseaux sociaux', 'en': 'social media'},
+    'research': {'fr': 'recherche', 'en': 'research'},
+    'innovation': {'fr': 'innovation', 'en': 'innovation'},
+    'business': {'fr': 'entreprise', 'en': 'business'},
+    'economic': {'fr': 'économique', 'en': 'economic'},
+    'financial': {'fr': 'financier', 'en': 'financial'},
+    'market': {'fr': 'marché', 'en': 'market'},
+    'trade': {'fr': 'commerce', 'en': 'trade'},
+    'tourism': {'fr': 'tourisme', 'en': 'tourism'},
+    'culture': {'fr': 'culture', 'en': 'culture'},
+    'entertainment': {'fr': 'divertissement', 'en': 'entertainment'},
+    'sports': {'fr': 'sports', 'en': 'sports'},
+    'food': {'fr': 'alimentation', 'en': 'food'},
+    'coffee': {'fr': 'café', 'en': 'coffee'},
+    'pizza': {'fr': 'pizza', 'en': 'pizza'},
+    'ice cream': {'fr': 'glace', 'en': 'ice cream'},
+    'gaming': {'fr': 'jeux', 'en': 'gaming'},
+    'music': {'fr': 'musique', 'en': 'music'},
+    'movies': {'fr': 'films', 'en': 'movies'},
+    'books': {'fr': 'livres', 'en': 'books'},
+    'library': {'fr': 'bibliothèque', 'en': 'library'},
+    'museum': {'fr': 'musée', 'en': 'museum'},
+    'park': {'fr': 'parc', 'en': 'park'},
+    'walking': {'fr': 'marche', 'en': 'walking'},
+    'cycling': {'fr': 'cyclisme', 'en': 'cycling'},
+    'bike sharing': {'fr': 'vélos partagés', 'en': 'bike sharing'},
+    'shopping': {'fr': 'achats', 'en': 'shopping'},
+    'delivery': {'fr': 'livraison', 'en': 'delivery'},
+    'streaming': {'fr': 'streaming', 'en': 'streaming'},
+    'podcast': {'fr': 'podcast', 'en': 'podcast'},
+    'smartphone': {'fr': 'smartphone', 'en': 'smartphone'},
+    'app usage': {'fr': 'utilisation d\'apps', 'en': 'app usage'},
+    'search': {'fr': 'recherches', 'en': 'search'},
+    'page views': {'fr': 'vues de pages', 'en': 'page views'},
+    'visits': {'fr': 'visites', 'en': 'visits'},
+    'attendance': {'fr': 'fréquentation', 'en': 'attendance'},
+    'sales': {'fr': 'ventes', 'en': 'sales'},
+    'prices': {'fr': 'prix', 'en': 'prices'},
+    'real estate': {'fr': 'immobilier', 'en': 'real estate'},
+    'transaction': {'fr': 'transaction', 'en': 'transaction'},
+    'regional': {'fr': 'régional', 'en': 'regional'},
+    'global': {'fr': 'mondial', 'en': 'global'},
+    'international': {'fr': 'international', 'en': 'international'},
+    'national': {'fr': 'national', 'en': 'national'},
+    'urban': {'fr': 'urbain', 'en': 'urban'},
+    'rural': {'fr': 'rural', 'en': 'rural'},
+    'public': {'fr': 'public', 'en': 'public'},
+    'private': {'fr': 'privé', 'en': 'private'},
+    'daily': {'fr': 'quotidien', 'en': 'daily'},
+    'weekly': {'fr': 'hebdomadaire', 'en': 'weekly'},
+    'monthly': {'fr': 'mensuel', 'en': 'monthly'},
+    'annual': {'fr': 'annuel', 'en': 'annual'},
+    'seasonal': {'fr': 'saisonnier', 'en': 'seasonal'},
+    
+    # Expressions et préfixes plus longs
+    'google search trends': {'fr': 'tendances de recherche Google', 'en': 'Google search trends'},
+    'wikipedia page views': {'fr': 'vues de pages Wikipédia', 'en': 'Wikipedia page views'},
+    'reddit activity': {'fr': 'activité Reddit', 'en': 'Reddit activity'},
+    'twitter trends': {'fr': 'tendances Twitter', 'en': 'Twitter trends'},
+    'youtube trending': {'fr': 'tendances YouTube', 'en': 'YouTube trending'},
+    'tiktok viral': {'fr': 'contenu viral TikTok', 'en': 'TikTok viral'},
+    'nasa space': {'fr': 'espace NASA', 'en': 'NASA space'},
+    'mars exploration': {'fr': 'exploration de Mars', 'en': 'Mars exploration'},
+    'space telescope': {'fr': 'télescope spatial', 'en': 'space telescope'},
+    'earthquake': {'fr': 'séisme', 'en': 'earthquake'},
+    'volcanic activity': {'fr': 'activité volcanique', 'en': 'volcanic activity'},
+    'climate change': {'fr': 'changement climatique', 'en': 'climate change'},
+    'global warming': {'fr': 'réchauffement climatique', 'en': 'global warming'},
+    'sea level': {'fr': 'niveau de la mer', 'en': 'sea level'},
+    'air quality': {'fr': 'qualité de l\'air', 'en': 'air quality'},
+    'birth rate': {'fr': 'taux de natalité', 'en': 'birth rate'},
+    'life expectancy': {'fr': 'espérance de vie', 'en': 'life expectancy'},
+    'gdp': {'fr': 'PIB', 'en': 'GDP'},
+    'inflation': {'fr': 'inflation', 'en': 'inflation'},
+    'cryptocurrency': {'fr': 'cryptomonnaie', 'en': 'cryptocurrency'},
+    'artificial intelligence': {'fr': 'intelligence artificielle', 'en': 'artificial intelligence'},
+    'machine learning': {'fr': 'apprentissage automatique', 'en': 'machine learning'},
+    'programming language': {'fr': 'langage de programmation', 'en': 'programming language'},
+    'quantum computing papers': {'fr': 'articles d\'informatique quantique', 'en': 'quantum computing papers'},
+    'oil market report': {'fr': 'rapport du marché pétrolier', 'en': 'oil market report'},
+    'gas market analysis': {'fr': 'analyse du marché gazier', 'en': 'gas market analysis'},
+    'open source': {'fr': 'code ouvert', 'en': 'open source'},
+    'software development': {'fr': 'développement logiciel', 'en': 'software development'},
+    'cyber security': {'fr': 'cybersécurité', 'en': 'cyber security'},
+    'data science': {'fr': 'science des données', 'en': 'data science'},
+    'metro station': {'fr': 'station de métro', 'en': 'metro station'},
+    'train punctuality': {'fr': 'ponctualité des trains', 'en': 'train punctuality'},
+    'railway': {'fr': 'chemin de fer', 'en': 'railway'},
+    'aviation': {'fr': 'aviation', 'en': 'aviation'},
+    'flight delays': {'fr': 'retards de vol', 'en': 'flight delays'},
+    'airport traffic': {'fr': 'trafic aéroport', 'en': 'airport traffic'},
+    'electric vehicle': {'fr': 'véhicule électrique', 'en': 'electric vehicle'},
+    'charging station': {'fr': 'borne de recharge', 'en': 'charging station'},
+    'ride sharing': {'fr': 'covoiturage', 'en': 'ride sharing'},
+    'public transit': {'fr': 'transport public', 'en': 'public transit'},
+    'smart city': {'fr': 'ville intelligente', 'en': 'smart city'},
+    'urban planning': {'fr': 'urbanisme', 'en': 'urban planning'},
+    'renewable energy': {'fr': 'énergie renouvelable', 'en': 'renewable energy'},
+    'solar power': {'fr': 'énergie solaire', 'en': 'solar power'},
+    'wind power': {'fr': 'énergie éolienne', 'en': 'wind power'},
+    'carbon emissions': {'fr': 'émissions de carbone', 'en': 'carbon emissions'},
+    'greenhouse gas': {'fr': 'gaz à effet de serre', 'en': 'greenhouse gas'},
+    'mental health': {'fr': 'santé mentale', 'en': 'mental health'},
+    'vaccination': {'fr': 'vaccination', 'en': 'vaccination'},
+    'fitness': {'fr': 'fitness', 'en': 'fitness'},
+    'obesity': {'fr': 'obésité', 'en': 'obesity'},
+    'nutrition': {'fr': 'nutrition', 'en': 'nutrition'},
+    'food security': {'fr': 'sécurité alimentaire', 'en': 'food security'},
+    'agriculture': {'fr': 'agriculture', 'en': 'agriculture'},
+    'organic farming': {'fr': 'agriculture biologique', 'en': 'organic farming'},
+    'fishing': {'fr': 'pêche', 'en': 'fishing'},
+    'forestry': {'fr': 'sylviculture', 'en': 'forestry'},
+    'wildlife': {'fr': 'faune', 'en': 'wildlife'},
+    'biodiversity': {'fr': 'biodiversité', 'en': 'biodiversity'},
+    'conservation': {'fr': 'conservation', 'en': 'conservation'},
+    
+    # Alternatives pour les contenus filtrés
+    'daily coffee consumption': {'fr': 'consommation quotidienne de café', 'en': 'daily coffee consumption'},
+    'pizza delivery popularity': {'fr': 'popularité de la livraison de pizza', 'en': 'pizza delivery popularity'},
+    'online video streaming': {'fr': 'streaming vidéo en ligne', 'en': 'online video streaming'},
+    'seasonal ice cream sales': {'fr': 'ventes saisonnières de glace', 'en': 'seasonal ice cream sales'},
+    'urban park visitor numbers': {'fr': 'nombre de visiteurs des parcs urbains', 'en': 'urban park visitor numbers'},
+    'digital music streaming habits': {'fr': 'habitudes de streaming musical numérique', 'en': 'digital music streaming habits'},
+    'weather app usage patterns': {'fr': 'modèles d\'utilisation d\'apps météo', 'en': 'weather app usage patterns'},
+    'e-commerce shopping trends': {'fr': 'tendances d\'achats e-commerce', 'en': 'e-commerce shopping trends'},
+    'gaming session duration': {'fr': 'durée des sessions de jeu', 'en': 'gaming session duration'},
+    'social media engagement': {'fr': 'engagement sur les réseaux sociaux', 'en': 'social media engagement'},
+    'public library visits': {'fr': 'visites de bibliothèques publiques', 'en': 'public library visits'},
+    'cinema ticket sales': {'fr': 'ventes de billets de cinéma', 'en': 'cinema ticket sales'},
+    'public transportation usage': {'fr': 'utilisation des transports publics', 'en': 'public transportation usage'},
+    'bike sharing activity': {'fr': 'activité de vélos partagés', 'en': 'bike sharing activity'},
+    'daily walking activity': {'fr': 'activité de marche quotidienne', 'en': 'daily walking activity'},
+    'food delivery trends': {'fr': 'tendances de livraison de nourriture', 'en': 'food delivery trends'},
+    'podcast download numbers': {'fr': 'nombres de téléchargements de podcasts', 'en': 'podcast download numbers'},
+    'museum attendance': {'fr': 'fréquentation des musées', 'en': 'museum attendance'},
+    'smartphone usage patterns': {'fr': 'modèles d\'utilisation des smartphones', 'en': 'smartphone usage patterns'},
+    'internet search activity': {'fr': 'activité de recherche internet', 'en': 'internet search activity'}
+}
+
+def translate_dataset_name(name: str, lang: str = 'en') -> str:
+    """
+    Traduit un nom de dataset en utilisant le service de traduction intelligent.
+    
+    Args:
+        name: Nom du dataset en anglais
+        lang: Langue cible ('fr' ou 'en')
+    
+    Returns:
+        Nom traduit naturellement ou nom original si traduction impossible
+    """
+    if lang == 'en':
+        return name  # Pas de traduction nécessaire
+    
+    try:
+        # Utiliser le service de traduction intelligent
+        from ..services.translation_service import translation_service
+        return translation_service.translate_dataset_name(name, lang)
+    except ImportError:
+        # Fallback vers l'ancienne méthode si le service n'est pas disponible
+        logger.warning("Service de traduction non disponible, utilisation du fallback")
+        return _translate_dataset_name_fallback(name, lang)
+    except Exception as e:
+        logger.warning(f"Erreur du service de traduction: {e}, utilisation du fallback")
+        return _translate_dataset_name_fallback(name, lang)
+
+def _translate_dataset_name_fallback(name: str, lang: str = 'en') -> str:
+    """
+    Méthode de traduction de fallback en cas de problème avec le service principal.
+    """
+    if lang == 'en':
+        return name
+    
+    # Traductions essentielles seulement
+    basic_translations = {
+        'statistics': 'statistiques',
+        'data': 'données', 
+        'trends': 'tendances',
+        'analysis': 'analyse',
+        'report': 'rapport',
+        'robotics': 'robotique',
+        'quantum computing': 'informatique quantique',
+        'oil market': 'marché pétrolier',
+        'international trade': 'commerce international'
+    }
+    
+    result = name
+    for english, french in basic_translations.items():
+        if english.lower() in name.lower():
+            result = result.replace(english, french)
+    
+    return result
+
 class RealDataCollector:
     """Collector of realistic data from open sources."""
     
@@ -56,7 +312,7 @@ class RealDataCollector:
                 dates.append(date)
         
         series = pd.Series(values, index=dates)
-        series.name = "Monthly births (INSEE France)"
+        series.name = "Monthly Birth Statistics (France)"
         series.source_name = "National Institute of Statistics and Economic Studies"
         series.source_url = "https://www.insee.fr/fr/statistiques/serie/000436394"
         series.source_type = "Official government data"
@@ -64,9 +320,9 @@ class RealDataCollector:
         
         return fallback_data
     
-    def get_datasets(self, n: int = 5) -> Dict[str, pd.Series]:
+    def get_datasets(self, n: int = 5, lang: str = 'en') -> Dict[str, pd.Series]:
         """Retrieves n datasets from real open data sources."""
-        logger.info(f"Retrieving {n} datasets from open sources")
+        logger.info(f"Retrieving {n} datasets from open sources (lang: {lang})")
         
         # Try to retrieve real data
         try:
@@ -90,10 +346,19 @@ class RealDataCollector:
         
         # Complete with real source datasets
         while len(result) < n:
-            new_dataset = self.real_source_generator.generate_real_dataset()
+            new_dataset = self.real_source_generator.generate_real_dataset(lang=lang)
             # Avoid duplicates
             if new_dataset.name not in result:
                 result[new_dataset.name] = new_dataset
+        
+        # Translate dataset names if needed
+        if lang != 'en':
+            translated_result = {}
+            for original_name, series in result.items():
+                translated_name = translate_dataset_name(original_name, lang)
+                series.name = translated_name
+                translated_result[translated_name] = series
+            result = translated_result
         
         logger.info(f"Total datasets generated: {len(result)} (real: {len(real_datasets)}, fallback: {min(2, len(result) - len(real_datasets))}, generated: {len(result) - len(real_datasets) - min(2, len(result) - len(real_datasets))})")
         return result
@@ -388,26 +653,26 @@ class RealSourceGenerator:
             'google_trends': {
                 'base_url': 'https://trends.google.com/trends/api/',
                 'topics': [
-                    'pizza', 'bitcoin', 'weather', 'netflix', 'spotify',
-                    'amazon', 'elections', 'olympics', 'christmas',
-                    'coffee', 'cats', 'dogs', 'memes', 'tiktok',
-                    'gaming', 'fashion', 'travel', 'food', 'movies',
-                    'chatgpt', 'ai-artificial-intelligence', 'climate-change-2024',
-                    'electric-vehicles-2023', 'web3-blockchain-2024', 'nft-crypto-2022',
-                    'metaverse-virtual-reality-2023', 'sustainable-fashion-2024',
-                    'plant-based-meat-alternatives-2023', 'carbon-capture-technology-2024',
-                    'mars-colonization-spacex-2023', 'autonomous-vehicles-self-driving-2024',
-                    'quantum-computing-breakthrough-2023', 'gene-editing-crispr-2024',
-                    'renewable-energy-solar-wind-2023', 'mental-health-awareness-2024',
-                    'remote-work-hybrid-workplace-2023', 'digital-detox-mindfulness-2024',
-                    'gig-economy-freelancing-2023', 'universal-basic-income-2024',
-                    'lab-grown-meat-cultured-2023', 'vertical-farming-urban-agriculture-2024',
-                    'ocean-cleanup-plastic-pollution-2023', 'space-tourism-commercial-2024',
-                    'brain-computer-interface-neuralink-2023', 'longevity-research-anti-aging-2024',
-                    'personalized-medicine-genomics-2023', 'synthetic-biology-bioengineering-2024',
-                    'nuclear-fusion-energy-breakthrough-2023', 'cryptocurrency-regulation-2024',
-                    'social-media-addiction-2023', 'cybersecurity-privacy-2024',
-                    'inflation-economic-recession-2023', 'housing-crisis-affordability-2024'
+                    'pizza-delivery-near-me-searches', 'bitcoin-price-panic-searches', 'weather-app-downloads-rainy-days', 'netflix-password-sharing-searches', 'spotify-wrapped-december-searches',
+                    'amazon-prime-day-deal-searches', 'voting-booth-locations-election-day', 'olympic-medal-count-searches', 'christmas-gift-ideas-last-minute',
+                    'coffee-shop-hours-monday-morning', 'cat-videos-youtube-searches', 'dog-adoption-weekend-searches', 'tiktok-dance-tutorial-searches', 'minecraft-server-setup-searches',
+                    'fast-fashion-environmental-impact-searches', 'cheap-flights-europe-summer-searches', 'food-poisoning-symptoms-searches', 'movie-theaters-showtimes-searches',
+                    'chatgpt-homework-help-searches', 'artificial-intelligence-job-replacement-fears', 'climate-change-anxiety-searches',
+                    'electric-car-charging-stations-map-searches', 'nft-art-investment-regret-searches', 'crypto-wallet-password-recovery-searches',
+                    'metaverse-headset-motion-sickness-searches', 'sustainable-clothing-brands-searches',
+                    'plant-based-burger-taste-test-searches', 'carbon-footprint-calculator-personal-searches',
+                    'mars-mission-application-nasa-searches', 'self-driving-car-accident-news-searches',
+                    'quantum-computer-vs-laptop-speed-searches', 'crispr-gene-editing-ethics-debate-searches',
+                    'solar-panel-installation-cost-calculator-searches', 'therapy-appointment-booking-searches',
+                    'work-from-home-productivity-tips-searches', 'digital-detox-app-recommendations-searches',
+                    'freelance-tax-deduction-guide-searches', 'universal-basic-income-pilot-program-searches',
+                    'lab-grown-meat-grocery-store-availability-searches', 'vertical-garden-apartment-balcony-searches',
+                    'ocean-plastic-cleanup-donation-searches', 'space-tourism-ticket-prices-searches',
+                    'brain-implant-elon-musk-neuralink-searches', 'anti-aging-supplements-effectiveness-searches',
+                    'genetic-testing-privacy-concerns-searches', 'synthetic-biology-safety-regulations-searches',
+                    'nuclear-fusion-breakthrough-news-searches', 'cryptocurrency-tax-reporting-searches',
+                    'social-media-break-benefits-searches', 'vpn-privacy-protection-searches',
+                    'inflation-grocery-budget-calculator-searches', 'affordable-housing-lottery-application-searches'
                 ]
             },
             'wikipedia': {
@@ -524,23 +789,10 @@ class RealSourceGenerator:
             'cryptocurrency': {
                 'base_url': 'https://api.coindesk.com/v1/bpi/',
                 'endpoints': ['currentprice.json', 'historical/close.json'],
-                'additional_cryptos': [
-                    'bitcoin-btc-2024', 'ethereum-eth-2024', 'cardano-ada-2024',
-                    'solana-sol-2024', 'polkadot-dot-2024', 'chainlink-link-2024',
-                    'polygon-matic-2024', 'avalanche-avax-2024', 'cosmos-atom-2024',
-                    'algorand-algo-2024', 'near-protocol-2024', 'fantom-ftm-2024'
-                ]
-            },
-            'stock_market': {
-                'base_url': 'https://query1.finance.yahoo.com/v8/finance/chart/',
-                'symbols': [
-                    'AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN', 'BTC-USD',
-                    'NFLX', 'AMD', 'ADBE', 'CRM', 'UBER', 'ZOOM', 'SPOT',
-                    'SQ', 'PYPL', 'COIN', 'RBLX', 'SNOW', 'PLTR', 'AI',
-                    'SHOP', 'TWLO', 'OKTA', 'CRWD', 'ZM', 'DOCU', 'PTON',
-                    'RIVN', 'LCID', 'NIO', 'XPEV', 'LI', 'BYND', 'MRNA',
-                    'BNTX', 'ZS', 'DDOG', 'NET', 'FSLY', 'ROKU', 'PINS',
-                    'SNAP', 'TWTR', 'META', 'NVDA', 'TSM', 'ASML', 'AVGO'
+                'market_categories': [
+                    'digital-currency-market-trends', 'cryptocurrency-adoption-rates',
+                    'blockchain-transaction-volume', 'crypto-payment-usage',
+                    'decentralized-finance-growth', 'nft-market-activity'
                 ]
             },
             'federal_reserve': {
@@ -626,12 +878,12 @@ class RealSourceGenerator:
             'us_transportation': {
                 'base_url': 'https://www.transtats.bts.gov/api/',
                 'datasets': [
-                    'airline-on-time-performance-2024', 'freight-transportation-2023',
-                    'highway-traffic-volume-2024', 'public-transit-ridership-2023',
-                    'bicycle-pedestrian-counts-2024', 'port-cargo-statistics-2023',
-                    'rail-freight-statistics-2024', 'traffic-safety-data-2023',
-                    'electric-vehicle-adoption-2024', 'ride-sharing-usage-2023',
-                    'autonomous-vehicle-testing-2024', 'micro-mobility-trends-2023'
+                    'delta-airlines-flight-delays-minutes-atlanta-2024', 'amazon-delivery-truck-miles-california-2023',
+                    'interstate-highway-traffic-cars-per-hour-texas-2024', 'nyc-subway-ridership-millions-passengers-2023',
+                    'central-park-bicycle-counts-daily-riders-2024', 'los-angeles-port-container-ships-2023',
+                    'freight-train-cargo-tons-chicago-hub-2024', 'highway-speed-limit-accident-rates-2023',
+                    'tesla-model-3-registrations-florida-2024', 'uber-ride-requests-san-francisco-2023',
+                    'waymo-self-driving-test-miles-arizona-2024', 'scooter-sharing-trips-washington-dc-2023'
                 ]
             },
             'uber_lyft': {
@@ -655,9 +907,9 @@ class RealSourceGenerator:
             'tesla_supercharger': {
                 'base_url': 'https://www.tesla.com/findus/list/superchargers/',
                 'ev_infrastructure': [
-                    'supercharger-network-expansion-2024', 'charging-utilization-rates-2023',
-                    'electric-vehicle-adoption-rates-2024', 'charging-session-duration-2023',
-                    'renewable-energy-charging-2024', 'charging-cost-analysis-2023'
+                    'tesla-supercharger-network-expansion-usa-2024', 'tesla-supercharger-utilization-rates-2023',
+                    'tesla-model-s-adoption-rates-california-2024', 'tesla-supercharger-session-duration-minutes-2023',
+                    'tesla-solar-powered-charging-stations-2024', 'tesla-supercharger-electricity-costs-kwh-2023'
                 ]
             },
             'smart_city_mobility': {
@@ -675,19 +927,19 @@ class RealSourceGenerator:
             'iea': {
                 'base_url': 'https://www.iea.org/api/',
                 'energy_data': [
-                    'global-energy-statistics-2024', 'renewable-energy-capacity-2023',
-                    'energy-efficiency-indicators-2024', 'carbon-emissions-by-fuel-2023',
-                    'electricity-generation-by-source-2024', 'energy-access-database-2023',
-                    'oil-market-report-2024', 'gas-market-report-2023',
-                    'coal-market-report-2024', 'critical-minerals-data-2023'
+                    'global-fossil-fuel-consumption-gigawatts-2024', 'solar-panel-capacity-europe-megawatts-2023',
+                    'household-energy-efficiency-ratings-usa-2024', 'coal-vs-wind-carbon-emissions-tons-2023',
+                    'nuclear-vs-solar-electricity-generation-france-2024', 'rural-energy-access-sub-saharan-africa-2023',
+                    'crude-oil-prices-per-barrel-opec-2024', 'natural-gas-consumption-heating-households-2023',
+                    'coal-power-plant-closures-germany-2024', 'lithium-battery-mineral-demand-2023'
                 ]
             },
             'irena': {
                 'base_url': 'https://www.irena.org/api/',
                 'renewable_data': [
-                    'renewable-capacity-statistics-2024', 'renewable-energy-jobs-2023',
-                    'energy-transition-costs-2024', 'off-grid-renewable-energy-2023',
-                    'renewable-energy-auctions-2024', 'green-hydrogen-potential-2023'
+                    'wind-farm-capacity-gigawatts-denmark-2024', 'solar-panel-installer-jobs-california-2023',
+                    'offshore-wind-construction-costs-billions-2024', 'village-solar-microgrids-kenya-2023',
+                    'government-renewable-energy-subsidies-millions-2024', 'green-hydrogen-fuel-cell-potential-japan-2023'
                 ]
             }
         }
@@ -735,7 +987,7 @@ class RealSourceGenerator:
         # Counter to avoid duplicates
         self.generated_count = 0
     
-    def generate_real_dataset(self) -> pd.Series:
+    def generate_real_dataset(self, lang: str = 'en') -> pd.Series:
         """Generates a dataset based on a real data source."""
         
         # Select a random source category
@@ -755,7 +1007,7 @@ class RealSourceGenerator:
         api_config = category_apis[api_name]
         
         # Generate realistic data based on the source
-        dataset_name, source_name, source_url = self._generate_dataset_info(category_name, api_name, api_config)
+        dataset_name, source_name, source_url = self._generate_dataset_info(category_name, api_name, api_config, lang)
         
         # Generate time series data
         series = self._generate_realistic_time_series(dataset_name)
@@ -768,7 +1020,7 @@ class RealSourceGenerator:
         self.generated_count += 1
         return series
     
-    def _generate_dataset_info(self, category: str, api_name: str, api_config: Dict) -> Tuple[str, str, str]:
+    def _generate_dataset_info(self, category: str, api_name: str, api_config: Dict, lang: str = 'en') -> Tuple[str, str, str]:
         """Generates information for a specific dataset."""
         
         if category == 'government':
@@ -853,32 +1105,37 @@ class RealSourceGenerator:
         elif category == 'social':
             if api_name == 'google_trends':
                 topic = random.choice(api_config['topics'])
-                dataset_name = f"Google searches for '{topic.replace('-', ' ')}'"
+                topic_clean = topic.replace('-', ' ').replace('_', ' ')
+                dataset_name = f"Google Search Trends for '{topic_clean}'"
                 source_name = "Google Trends API"
                 source_url = f"{api_config['base_url']}explore?q={topic}"
             elif api_name == 'wikipedia':
                 page = random.choice(api_config['popular_pages'])
-                dataset_name = f"Wikipedia page views for '{page.replace('_', ' ')}'"
+                page_clean = page.replace('_', ' ')
+                dataset_name = f"Wikipedia Page Views for '{page_clean}'"
                 source_name = "Wikimedia API"
                 source_url = f"{api_config['base_url']}top/en.wikipedia/all-access/{page}"
             elif api_name == 'reddit':
                 subreddit = random.choice(api_config['subreddits'])
-                dataset_name = f"Reddit activity on r/{subreddit}"
+                dataset_name = f"Reddit Activity on r/{subreddit}"
                 source_name = "Reddit API"
                 source_url = f"{api_config['base_url']}{subreddit}/hot.json"
             elif api_name == 'twitter':
                 topic = random.choice(api_config['trending_topics'])
-                dataset_name = f"Twitter trends about {topic.replace('-', ' ')}"
+                topic_clean = topic.replace('-', ' ')
+                dataset_name = f"Twitter Trends about {topic_clean}"
                 source_name = "Twitter API"
                 source_url = f"{api_config['base_url']}{topic}"
             elif api_name == 'youtube':
                 category_data = random.choice(api_config['trending_categories'])
-                dataset_name = f"YouTube trending videos in {category_data.replace('-', ' ')}"
+                category_clean = category_data.replace('-', ' ')
+                dataset_name = f"YouTube Trending Videos: {category_clean}"
                 source_name = "YouTube API"
                 source_url = f"{api_config['base_url']}{category_data}"
             else:  # tiktok
                 topic = random.choice(api_config['viral_topics'])
-                dataset_name = f"TikTok viral content about {topic.replace('-', ' ')}"
+                topic_clean = topic.replace('-', ' ')
+                dataset_name = f"TikTok Viral Content: {topic_clean}"
                 source_name = "TikTok API"
                 source_url = f"{api_config['base_url']}{topic}"
                 
@@ -889,22 +1146,21 @@ class RealSourceGenerator:
                 source_name = "World Bank Open Data"
                 source_url = f"{api_config['base_url']}{indicator}?format=json"
             elif api_name == 'cryptocurrency':
-                dataset_name = "Bitcoin historical prices"
-                source_name = "CoinDesk API"
-                source_url = f"{api_config['base_url']}historical/close.json"
-            elif api_name == 'stock_market':
-                symbol = random.choice(api_config['symbols'])
-                dataset_name = f"Stock prices {symbol}"
-                source_name = "Yahoo Finance API"
-                source_url = f"{api_config['base_url']}{symbol}"
+                category = random.choice(api_config.get('market_categories', ['digital-currency-market-trends']))
+                category_clean = category.replace('-', ' ').title()
+                dataset_name = f"Cryptocurrency Market: {category_clean}"
+                source_name = "Digital Finance Analytics"
+                source_url = f"{api_config['base_url']}market/{category}"
             elif api_name == 'federal_reserve':
                 indicator = random.choice(api_config['economic_indicators'])
-                dataset_name = f"{indicator.replace('-', ' ').title()}"
+                indicator_clean = indicator.replace('-', ' ').replace('gdp', 'GDP').replace('rate', 'Rate')
+                dataset_name = f"Economic Indicator: {indicator_clean.title()}"
                 source_name = "Federal Reserve API"
                 source_url = f"{api_config['base_url']}{indicator}"
             elif api_name == 'imf':
                 indicator = random.choice(api_config['global_indicators'])
-                dataset_name = f"{indicator.replace('-', ' ').title()}"
+                indicator_clean = indicator.replace('-', ' ').replace('statistics', 'Statistics')
+                dataset_name = f"IMF Data: {indicator_clean.title()}"
                 source_name = "International Monetary Fund"
                 source_url = f"{api_config['base_url']}{indicator}"
             elif api_name == 'oecd':
@@ -935,17 +1191,18 @@ class RealSourceGenerator:
                 source_name = "RATP Open Data"
                 source_url = f"{api_config['base_url']}?dataset={dataset}"
             elif api_name == 'aviation':
-                dataset_name = "Real-time air traffic"
+                dataset_name = "Real-time Air Traffic Data"
                 source_name = "OpenSky Network API"
                 source_url = f"{api_config['base_url']}states/all"
             elif api_name == 'flightradar24':
                 data_type = random.choice(api_config['data_types'])
-                dataset_name = f"{data_type.replace('-', ' ').title()}"
+                data_clean = data_type.replace('-', ' ').replace('analysis', 'Analysis').replace('tracking', 'Tracking')
+                dataset_name = f"Aviation: {data_clean.title()}"
                 source_name = "FlightRadar24 API"
                 source_url = f"{api_config['base_url']}{data_type}"
             elif api_name == 'us_transportation':
                 dataset = random.choice(api_config['datasets'])
-                dataset_name = f"{dataset.replace('-', ' ').title()}"
+                dataset_name = self._format_us_transportation_dataset_name(dataset)
                 source_name = "US Bureau of Transportation"
                 source_url = f"{api_config['base_url']}{dataset}"
             elif api_name == 'uber_lyft':
@@ -960,7 +1217,7 @@ class RealSourceGenerator:
                 source_url = f"{api_config['base_url']}{data}"
             elif api_name == 'tesla_supercharger':
                 data = random.choice(api_config['ev_infrastructure'])
-                dataset_name = f"{data.replace('-', ' ').title()}"
+                dataset_name = self._format_tesla_dataset_name(data)
                 source_name = "Tesla Supercharger API"
                 source_url = f"{api_config['base_url']}{data}"
             else:  # smart_city_mobility
@@ -1006,13 +1263,13 @@ class RealSourceGenerator:
                 source_url = f"{api_config['base_url']}{data}"
         
         # Clean the dataset name to remove dates and unwanted formatting
-        dataset_name = self._clean_dataset_name(dataset_name)
+        dataset_name = self._clean_dataset_name(dataset_name, lang)
         
         return dataset_name, source_name, source_url
     
     def _filter_inappropriate_content(self, dataset_name: str) -> bool:
         """
-        Filters inappropriate content for a humorous application.
+        Filters inappropriate content and overly specific data for a humorous application.
         Returns True if content is appropriate, False otherwise.
         """
         inappropriate_keywords = [
@@ -1020,213 +1277,386 @@ class RealSourceGenerator:
             'mortality', 'death', 'deaths', 'fatal', 'suicide', 'homicide',
             'kill', 'murder', 'violence', 'accident', 'crash',
             
-            # Maladies graves et épidémies sensibles
+            # Serious diseases and sensitive epidemics
             'covid-19', 'covid', 'pandemic', 'disease', 'cancer', 'tumor',
             'epidemic', 'outbreak', 'infection', 'virus', 'bacteria',
             
-            # Sujets politiques controversés
+            # Controversial political subjects
             'war', 'conflict', 'terrorism', 'military', 'weapon',
             'refugee', 'asylum', 'persecution', 'genocide',
             
-            # Problèmes sociaux graves
+            # Serious social problems
             'poverty', 'hunger', 'malnutrition', 'homeless',
             'discrimination', 'abuse', 'trafficking', 'slavery',
             
-            # Catastrophes naturelles graves
+            # Serious natural disasters
             'disaster', 'earthquake', 'tsunami', 'flood', 'drought',
-            'wildfire', 'hurricane', 'tornado', 'cyclone'
+            'wildfire', 'hurricane', 'tornado', 'cyclone',
+            
+            # Overly specific financial data
+            'aapl', 'googl', 'msft', 'tsla', 'amzn', 'nflx', 'amd', 'nvda',
+            'stock prices', 'share price', 'ticker', 'nasdaq', 'dow jones',
+            'bitcoin', 'ethereum', 'dogecoin', 'specific company'
         ]
         
         dataset_lower = dataset_name.lower()
         return not any(keyword in dataset_lower for keyword in inappropriate_keywords)
+    
+    def _validate_data_precision(self, dataset_name: str) -> bool:
+        """
+        Validates that the dataset name is sufficiently precise and measurable for meaningful correlations.
+        Returns True if data is precise enough, False if too vague.
+        """
+        precision_indicators = [
+            # Quantitative measures
+            'rate', 'per person', 'per capita', 'per resident', 'percentage', '%', 'index', 'volume', 'count',
+            'average', 'frequency', 'ratio', 'density', 'consumption', 'production',
+            'growth', 'change', 'level', 'temperature', 'price', 'cost', 'value',
+            
+            # Time-based measures
+            'daily', 'monthly', 'annual', 'weekly', 'hourly', 'per day', 'per month',
+            'per year', 'per hour', 'per week',
+            
+            # Unit indicators
+            'kwh', 'usd', 'eur', 'liters', 'kg', 'tons', 'meters', 'km²', '°c',
+            'thousand', 'million', 'billion', 'minutes', 'hours', 'days',
+            
+            # Specific domains with measurable aspects
+            'birth rate', 'unemployment rate', 'inflation', 'gdp', 'co2', 'energy',
+            'temperature', 'precipitation', 'traffic flow', 'ridership', 'attendance',
+            'usage', 'adoption', 'penetration', 'coverage', 'expenditure', 'sale prices',
+            'air quality', 'birth statistics', 'housing prices', 'real estate prices'
+        ]
+        
+        dataset_lower = dataset_name.lower()
+        
+        # Check if dataset name contains precision indicators
+        has_precision = any(indicator in dataset_lower for indicator in precision_indicators)
+        
+        # Check if it's not just generic terms WITHOUT precision indicators
+        generic_only_terms = ['general', 'various', 'mixed', 'diverse', 'overall', 'total', 'comprehensive']
+        generic_terms_present = [term for term in generic_only_terms if term in dataset_lower]
+        
+        # If it has precision indicators, allow even if it has some generic terms
+        # Only reject if it's purely generic (has generic terms but no precision indicators)
+        is_purely_generic = len(generic_terms_present) > 0 and not has_precision
+        
+        # Must have precision indicators and not be purely generic
+        return has_precision and not is_purely_generic
 
-    def _clean_dataset_name(self, dataset_name: str) -> str:
-        """Remove dates, years, and unnecessary formatting from dataset names."""
-        # First filter inappropriate content
+    def _clean_dataset_name(self, dataset_name: str, lang: str = 'en') -> str:
+        """Improves dataset names to make them clearer and more descriptive."""
+        # Filter inappropriate content
         if not self._filter_inappropriate_content(dataset_name):
-            # Replace with neutral and fun alternatives
+            # Measurable and precise alternatives with clear metrics
             alternatives = [
-                "Coffee consumption trends",
-                "Pizza delivery patterns", 
-                "Cat video engagement metrics",
-                "Ice cream sales by season",
-                "Dog park attendance rates",
-                "Music streaming habits",
-                "Weather app usage",
-                "Online shopping patterns",
-                "Video game play time",
-                "Social media engagement",
-                "Book reading statistics",
-                "Movie theater attendance",
-                "Public transport usage",
-                "Bicycle sharing activity",
-                "Park visitation rates",
-                "Food delivery preferences",
-                "Podcast listening trends",
-                "Art gallery visits",
-                "Beach volleyball participation",
-                "Library book checkouts"
+                "Daily Coffee Consumption Trends",
+                "Pizza Delivery Popularity", 
+                "Online Video Streaming Activity",
+                "Seasonal Ice Cream Sales",
+                "Urban Park Visitor Numbers",
+                "Digital Music Streaming Habits",
+                "Weather App Usage Patterns",
+                "E-commerce Shopping Trends",
+                "Gaming Session Duration",
+                "Social Media Engagement",
+                "Public Library Visits",
+                "Cinema Ticket Sales",
+                "Public Transportation Usage",
+                "Bike Sharing Activity",
+                "Daily Walking Activity",
+                "Food Delivery Trends",
+                "Podcast Download Numbers",
+                "Museum Attendance",
+                "Smartphone Usage Patterns",
+                "Internet Search Activity"
             ]
-            import random
-            return random.choice(alternatives)
+            selected_alternative = random.choice(alternatives)
+            return selected_alternative
         
-        # Remove years like 2023, 2024, etc. and date ranges like 2020-2024
-        cleaned = re.sub(r'-?\d{4}(?:-\d{4})?', '', dataset_name)
+        # Start by cleaning the original name
+        cleaned = dataset_name.strip()
         
-        # Remove organizational prefixes like "singapore data:", "renewable energy:", "german data:", etc.
-        cleaned = re.sub(r'^(singapore|australian|canadian|german|japanese|government|uk|us|space|weather|geological|economic|railway|metro|energy|health|software development|renewable energy|patent|financial|transport|mobility)\s+(data|indicator|research|statistics|metrics|trends|analysis|reports)\s*:\s*', '', cleaned, flags=re.IGNORECASE)
+        # Remove years like 2023, 2024, etc. and ranges like 2020-2024
+        cleaned = re.sub(r'-?\d{4}(?:-\d{4})?', '', cleaned)
         
-        # Remove simple organizational prefixes
-        cleaned = re.sub(r'^(singapore|australian|canadian|german|japanese|space|weather|geological|economic|railway|metro|energy|health|renewable energy)\s+(data)\s*:\s*', '', cleaned, flags=re.IGNORECASE)
+        # Remove redundant organizational prefixes but keep important context
+        # Instead of removing completely, replace with shorter terms
+        cleaned = re.sub(r'^(singapore|australian|canadian|german|japanese|government|uk|us)\s+(data|indicator|research|statistics|metrics|trends|analysis|reports)\s*:\s*', '', cleaned, flags=re.IGNORECASE)
         
-        # Remove any remaining "category:" patterns
+        # Clean overly specific technical prefixes
+        cleaned = re.sub(r'^(space|weather|geological|economic|railway|metro|energy|health|software development|renewable energy|patent|financial|transport|mobility)\s+(data)\s*:\s*', '', cleaned, flags=re.IGNORECASE)
+        
+        # Remove remaining "category:" patterns
         cleaned = re.sub(r'^[a-zA-Z\s]+:\s*', '', cleaned)
         
-        # Remove extra spaces and dashes left by date removal
+        # Clean spaces and dashes left by date removal
         cleaned = re.sub(r'\s*[-]\s*$', '', cleaned)  # Remove trailing dashes
         cleaned = re.sub(r'\s*[-]\s*[-]', '', cleaned)  # Remove double dashes
         cleaned = re.sub(r'\s+', ' ', cleaned)  # Replace multiple spaces with single space
         cleaned = cleaned.strip()  # Remove leading/trailing spaces
         
-        # Remove trailing words like "data", "from", "by" if they end the title
+        # Remove only redundant final words but keep descriptive context
         cleaned = re.sub(r'\s+(data|from|by)$', '', cleaned, flags=re.IGNORECASE)
         
-        return cleaned.title() if cleaned else dataset_name
+        # Add country context when available and improve readability
+        country_indicators = {
+            'france': '(France)', 'french': '(France)', 'insee': '(France)',
+            'usa': '(USA)', 'us': '(USA)', 'american': '(USA)', 'united states': '(USA)',
+            'uk': '(UK)', 'britain': '(UK)', 'british': '(UK)', 'england': '(UK)',
+            'canada': '(Canada)', 'canadian': '(Canada)',
+            'germany': '(Germany)', 'german': '(Germany)', 'deutschland': '(Germany)',
+            'australia': '(Australia)', 'australian': '(Australia)',
+            'japan': '(Japan)', 'japanese': '(Japan)',
+            'singapore': '(Singapore)', 'nasa': '(USA)', 'usgs': '(USA)',
+            'noaa': '(USA)', 'world bank': '(Global)', 'oecd': '(Global)',
+            'european': '(Europe)', 'eu': '(Europe)'
+        }
+        
+        # Add country indicator if found and not already present
+        country_added = False
+        for indicator, country in country_indicators.items():
+            if indicator in cleaned.lower() and country not in cleaned:
+                if not cleaned.endswith(')'):
+                    cleaned = f"{cleaned} {country}"
+                    country_added = True
+                    break
+        
+        # Improve readability by adding context when too short or vague
+        # Also check for precision - data should be measurable and specific
+        vague_terms = ['statistics', 'data', 'trends', 'analysis', 'information', 'metrics', 'indicators', 'measures']
+        is_too_vague = any(term in cleaned.lower() for term in vague_terms) and len(cleaned) < 30
+        
+        if len(cleaned) < 20 or is_too_vague:
+            # If title is too short or vague, add more precise and measurable context
+            context_hints = {
+                'birth': 'Birth Rate Trends',
+                'population': 'Population Growth Patterns',
+                'temperature': 'Temperature Changes',
+                'earthquake': 'Seismic Activity',
+                'traffic': 'Traffic Flow Patterns',
+                'energy': 'Energy Consumption Trends',
+                'employment': 'Employment Levels',
+                'housing': 'Housing Market Activity',
+                'education': 'Education Statistics',
+                'health': 'Health Expenditure Trends',
+                'economic': 'Economic Growth Patterns',
+                'trade': 'International Trade Activity',
+                'climate': 'Climate Change Indicators',
+                'internet': 'Internet Usage Patterns',
+                'urban': 'Urban Development',
+                'inflation': 'Price Changes',
+                'unemployment': 'Unemployment Trends',
+                'tourism': 'Tourist Activity',
+                'transport': 'Public Transport Usage',
+                'renewable': 'Renewable Energy Adoption'
+            }
+            
+            for hint, replacement in context_hints.items():
+                if hint in cleaned.lower():
+                    cleaned = replacement
+                    # Re-add country if it was there before
+                    if country_added:
+                        for indicator, country in country_indicators.items():
+                            if indicator in dataset_name.lower():
+                                cleaned = f"{cleaned} {country}"
+                                break
+                    break
+        
+        # Format the final title
+        if cleaned:
+            # Ensure proper capitalization
+            cleaned = cleaned.title()
+            # Fix some special capitalization cases
+            cleaned = cleaned.replace('Gdp', 'GDP')
+            cleaned = cleaned.replace('Co2', 'CO2')
+            cleaned = cleaned.replace('Usa', 'USA')
+            cleaned = cleaned.replace('Uk', 'UK')
+            cleaned = cleaned.replace('Ai', 'AI')
+            cleaned = cleaned.replace('Api', 'API')
+            cleaned = cleaned.replace('Nasa', 'NASA')
+            cleaned = cleaned.replace('Nhs', 'NHS')
+            
+                        # Final validation: ensure the result is precise enough for meaningful correlations
+            if not self._validate_data_precision(cleaned):
+                # If not precise enough, add simpler, more natural descriptors
+                precision_alternatives = [
+                    f"{cleaned} Trends",
+                    f"{cleaned} Patterns", 
+                    f"{cleaned} Statistics",
+                    f"{cleaned} Measurements",
+                    f"{cleaned} Activity",
+                    f"{cleaned} Levels",
+                    f"{cleaned} Usage",
+                    f"{cleaned} Growth",
+                    f"{cleaned} Changes"
+                ]
+                cleaned = random.choice(precision_alternatives)
+            
+            # Return cleaned name without translation (translation happens later in get_datasets)
+            return cleaned
+        else:
+            # If nothing remains after cleaning, use original name with proper capitalization
+            result = dataset_name.title()
+            
+            # Ensure even fallback results are clear
+            if not self._validate_data_precision(result):
+                result = f"{result} Trends"
+            
+            # Return result without translation (translation happens later in get_datasets)
+            return result
     
     def _format_government_dataset_name(self, dataset_id: str) -> str:
-        """Formats a government dataset name."""
+        """Formats French government dataset names with clear English labels and country."""
         format_map = {
-            'demandes-de-valeurs-foncieres': 'Real estate sales',
-            'taux-de-chomage-par-departement': 'Unemployment rate by region',
-            'elections-europeennes-2019': 'European elections results',
-            'accidents-corporels-de-la-circulation': 'Road traffic accidents',
-            'effectifs-d-etudiants-inscrits-dans-les-universites': 'University enrollment statistics',
-            'resultats-elections-legislatives-2022': 'Legislative elections results',
+            'demandes-de-valeurs-foncieres': 'Real Estate Transaction Data (France)',
+            'taux-de-chomage-par-departement': 'Regional Unemployment Statistics (France)',
+            'elections-europeennes-2019': 'European Election Results (France)',
+            'accidents-corporels-de-la-circulation': 'Road Traffic Safety Statistics (France)',
+            'effectifs-d-etudiants-inscrits-dans-les-universites': 'University Enrollment Data (France)',
+            'resultats-elections-legislatives-2022': 'Legislative Election Results (France)',
         }
-        return format_map.get(dataset_id, dataset_id.replace('-', ' ').title())
+        return format_map.get(dataset_id, dataset_id.replace('-', ' ').title() + " (France)")
     
     def _format_us_dataset_name(self, dataset_id: str) -> str:
-        """Formats a US dataset name."""
+        """Formats US dataset names with clear English labels and country."""
         format_map = {
-            'unemployment-rate-by-state': 'Unemployment rate by state',
-            'college-graduation-rates': 'College graduation rates',
-            'energy-consumption-by-sector': 'Energy consumption by sector',
-            'crime-statistics-by-city': 'Crime statistics by city',
-            'housing-prices-by-county': 'Housing prices by county',
+            'unemployment-rate-by-state': 'State Unemployment Statistics (USA)',
+            'college-graduation-rates': 'Higher Education Completion (USA)',
+            'energy-consumption-by-sector': 'Energy Consumption Data (USA)',
+            'crime-statistics-by-city': 'Urban Safety Statistics (USA)',
+            'housing-prices-by-county': 'Regional Housing Market Data (USA)',
+            'covid-19-vaccination-rates-2021': 'Vaccination Coverage (USA)',
+            'broadband-internet-access-2020': 'Internet Access Coverage (USA)',
+            'electric-vehicle-registrations-2022': 'Electric Vehicle Adoption (USA)',
+            'renewable-energy-production-2023': 'Clean Energy Production (USA)',
+            'air-quality-measurements-2024': 'Environmental Air Quality (USA)',
         }
-        return format_map.get(dataset_id, dataset_id.replace('-', ' ').title())
+        return format_map.get(dataset_id, dataset_id.replace('-', ' ').title() + " (USA)")
     
     def _format_uk_dataset_name(self, dataset_id: str) -> str:
-        """Formats a UK dataset name."""
+        """Formats UK dataset names with clear English labels."""
         format_map = {
-            'house-prices-by-postcode': 'House prices by postcode',
-            'nhs-waiting-times': 'NHS waiting times',
-            'school-performance-data': 'School performance data',
-            'transport-delays-by-region': 'Transport delays by region',
+            'house-prices-by-postcode': 'House Prices by Postcode (UK)',
+            'nhs-waiting-times': 'NHS Healthcare Waiting Times',
+            'school-performance-data': 'School Performance Data (UK)',
+            'transport-delays-by-region': 'Transport Delays by Region (UK)',
+            'brexit-trade-impact-2020': 'Brexit Trade Impact Analysis',
+            'renewable-energy-capacity-2023': 'Renewable Energy Capacity (UK)',
+            'mental-health-statistics-2024': 'Mental Health Statistics (UK)',
         }
-        return format_map.get(dataset_id, dataset_id.replace('-', ' ').title())
+        return format_map.get(dataset_id, dataset_id.replace('-', ' ').title() + " (UK)")
     
     def _format_nasa_dataset_name(self, endpoint: str) -> str:
-        """Formats a NASA dataset name."""
+        """Formats NASA dataset names with clear descriptive labels."""
         format_map = {
-            'planetary/apod': 'Astronomy picture of the day',
-            'neo/rest/v1/feed': 'Near Earth objects detection',
-            'insight_weather/': 'Mars weather data',
-            'planetary/earth/imagery': 'Earth satellite imagery',
-            'exoplanet/kepler/discoveries': 'Exoplanet discoveries',
-            'mars/curiosity/photos': 'Mars rover photos',
-            'solar/flare/activity': 'Solar flare activity',
-            'asteroid/belt/tracking': 'Asteroid tracking',
-            'iss/location/tracking': 'Space station position',
-            'artemis/mission/data': 'Moon mission data',
-            'jwst/observations': 'Space telescope observations',
-            'climate/global/temperature': 'Global temperature measurements',
-            'earth/landsat/imagery': 'Satellite Earth imagery',
-            'mars/perseverance/samples': 'Mars rock samples',
-            'solar/wind/monitoring': 'Solar wind measurements'
+            'planetary/apod': 'Astronomy Picture of the Day (NASA)',
+            'neo/rest/v1/feed': 'Near Earth Objects Detection Data',
+            'insight_weather/': 'Mars Weather Monitoring',
+            'planetary/earth/imagery': 'Earth Satellite Imagery',
+            'exoplanet/kepler/discoveries': 'Kepler Exoplanet Discoveries',
+            'mars/curiosity/photos': 'Mars Curiosity Rover Photography',
+            'solar/flare/activity': 'Solar Flare Activity Monitoring',
+            'asteroid/belt/tracking': 'Asteroid Belt Tracking Data',
+            'iss/location/tracking': 'International Space Station Position',
+            'artemis/mission/data': 'Artemis Lunar Mission Data',
+            'jwst/observations': 'James Webb Space Telescope Observations',
+            'climate/global/temperature': 'Global Climate Temperature Data (NASA)',
+            'earth/landsat/imagery': 'Landsat Satellite Imagery',
+            'mars/perseverance/samples': 'Mars Perseverance Rover Samples',
+            'solar/wind/monitoring': 'Solar Wind Monitoring Data'
         }
-        return format_map.get(endpoint, f"Space data: {endpoint}")
+        return format_map.get(endpoint, f"Space Data: {endpoint.replace('/', ' ').title()}")
     
     def _format_noaa_dataset_name(self, endpoint: str) -> str:
-        """Formats a NOAA dataset name."""
+        """Formats NOAA dataset names with clear meteorological labels."""
         format_map = {
-            'global-temperature-anomalies': 'Global temperature anomalies',
-            'precipitation-data': 'Precipitation measurements',
-            'storm-tracking': 'Storm tracking data',
-            'ocean-temperature': 'Ocean temperature measurements',
-            'hurricane-intensity-data-2020-2024': 'Hurricane intensity data',
-            'sea-level-rise-measurements-2023': 'Sea level rise measurements',
-            'arctic-ice-extent-decline-2024': 'Arctic ice decline',
-            'coral-bleaching-events-2023': 'Coral bleaching events',
-            'extreme-weather-frequency-2024': 'Extreme weather frequency',
-            'drought-severity-index-2023': 'Drought severity index',
-            'wildfire-risk-assessment-2024': 'Wildfire risk assessment',
-            'atmospheric-co2-levels-2024': 'Atmospheric CO2 levels',
-            'ocean-acidification-data-2023': 'Ocean acidification data',
-            'climate-change-indicators-2024': 'Climate change indicators',
-            'tornado-activity-statistics-2023': 'Tornado activity statistics',
-            'flood-risk-projections-2024': 'Flood risk projections'
+            'global-temperature-anomalies': 'Global Temperature Anomalies',
+            'precipitation-data': 'Global Precipitation Data',
+            'storm-tracking': 'Ocean Storm Tracking',
+            'ocean-temperature': 'Global Ocean Temperature',
+            'hurricane-intensity-data-2020-2024': 'Hurricane Intensity Analysis',
+            'sea-level-rise-measurements-2023': 'Sea Level Rise Measurements',
+            'arctic-ice-extent-decline-2024': 'Arctic Ice Extent Decline',
+            'coral-bleaching-events-2023': 'Coral Bleaching Events',
+            'extreme-weather-frequency-2024': 'Extreme Weather Frequency',
+            'drought-severity-index-2023': 'Drought Severity Index',
+            'wildfire-risk-assessment-2024': 'Wildfire Risk Assessment',
+            'atmospheric-co2-levels-2024': 'Atmospheric CO2 Levels',
+            'ocean-acidification-data-2023': 'Ocean Acidification Data',
+            'climate-change-indicators-2024': 'Climate Change Indicators',
         }
-        return format_map.get(endpoint, f"Weather data: {endpoint}")
+        return format_map.get(endpoint, f"Climate Data: {endpoint.replace('-', ' ').title()}")
     
     def _format_usgs_dataset_name(self, endpoint: str) -> str:
-        """Formats a USGS dataset name."""
+        """Formats USGS dataset names with clear geological labels."""
         format_map = {
-            'summary/all_month.csv': 'Earthquake activity',
-            'summary/4.5_month.csv': 'Major earthquakes',
-            'summary/significant_month.csv': 'Significant earthquakes',
-            'landslide/global/events': 'Landslide events',
-            'volcanic/activity/alerts': 'Volcanic activity alerts',
-            'groundwater/level/monitoring': 'Groundwater level monitoring',
-            'mineral/production/statistics': 'Mineral production statistics',
-            'streamflow/measurements': 'River flow measurements',
-            'tsunami/warning/system': 'Tsunami warning data',
-            'geological/hazards/assessment': 'Geological hazard assessments'
+            'summary/all_month.csv': 'Global Seismic Activity',
+            'summary/4.5_month.csv': 'Major Earthquakes (Magnitude 4.5+)',
+            'summary/significant_month.csv': 'Significant Earthquakes',
+            'landslide/global/events': 'Global Landslide Events',
+            'volcanic/activity/alerts': 'Volcanic Activity Alerts',
+            'groundwater/level/monitoring': 'Groundwater Level Monitoring',
+            'mineral/production/statistics': 'Mineral Production Statistics',
+            'streamflow/measurements': 'River Streamflow Measurements',
+            'tsunami/warning/system': 'Tsunami Warning System Data',
+            'geological/hazards/assessment': 'Geological Hazards Assessment'
         }
-        return format_map.get(endpoint, f"Geological data: {endpoint}")
+        return format_map.get(endpoint, f"Geological Data: {endpoint.replace('/', ' ').title()}")
     
     def _format_worldbank_dataset_name(self, indicator: str) -> str:
-        """Formats a World Bank indicator name."""
+        """Formats World Bank indicators with clear economic labels."""
         format_map = {
-            'NY.GDP.MKTP.CD': 'GDP by country',
-            'SP.POP.TOTL': 'Population by country',
-            'SL.UEM.TOTL.ZS': 'Unemployment rates',
-            'EN.ATM.CO2E.PC': 'CO2 emissions per capita',
-            'IT.NET.USER.ZS': 'Internet users percentage',
-            'SH.DYN.MORT': 'Infant mortality rates',
-            'SE.ADT.LITR.ZS': 'Adult literacy rates',
-            'EG.USE.ELEC.KH.PC': 'Electric power consumption',
-            'SP.URB.TOTL.IN.ZS': 'Urban population percentage',
-            'NE.TRD.GNFS.ZS': 'Trade as percentage of GDP',
-            'SL.UEM.ADVN.ZS': 'Unemployment with advanced education',
-            'EN.ATM.GHGT.KT.CE': 'Total greenhouse gas emissions',
-            'IT.CEL.SETS.P2': 'Mobile phone subscriptions',
-            'SH.XPD.CHEX.GD.ZS': 'Health expenditure',
-            'SE.XPD.TOTL.GD.ZS': 'Education expenditure',
-            'FP.CPI.TOTL.ZG': 'Inflation rates',
-            'NY.GDP.PCAP.CD': 'GDP per capita',
-            'SP.DYN.LE00.IN': 'Life expectancy at birth',
-            'AG.LND.FRST.ZS': 'Forest area percentage',
-            'EG.ELC.RNEW.ZS': 'Renewable electricity output'
+            'NY.GDP.MKTP.CD': 'Gross Domestic Product by Country (World Bank)',
+            'SP.POP.TOTL': 'Total Population by Country',
+            'SL.UEM.TOTL.ZS': 'International Unemployment Rates',
+            'EN.ATM.CO2E.PC': 'CO2 Emissions per Person',
+            'IT.NET.USER.ZS': 'Internet Users by Country',
+            'SH.DYN.MORT': 'Global Infant Mortality Rates',
+            'SE.ADT.LITR.ZS': 'Adult Literacy Rates',
+            'EG.USE.ELEC.KH.PC': 'Electric Power Consumption per Person',
+            'SP.URB.TOTL.IN.ZS': 'Global Urban Population',
+            'NE.TRD.GNFS.ZS': 'International Trade (% of GDP)',
+            'FP.CPI.TOTL.ZG': 'Global Inflation Rates',
+            'NY.GDP.PCAP.CD': 'Global GDP per Person',
+            'SP.DYN.LE00.IN': 'Global Life Expectancy',
+            'AG.LND.FRST.ZS': 'Forest Area by Country',
+            'EG.ELC.RNEW.ZS': 'Renewable Electricity Production'
         }
-        return format_map.get(indicator, f"Economic indicator: {indicator}")
+        return format_map.get(indicator, f"Economic Indicator: {indicator}")
+    
+    def _format_github_dataset_name(self, metric: str) -> str:
+        """Formats GitHub metrics with clear technology labels."""
+        format_map = {
+            'programming-language-trends': 'Programming Language Trends',
+            'framework-popularity': 'Software Framework Popularity',
+            'open-source-activity': 'Global Open Source Activity',
+            'repository-statistics': 'GitHub Repository Statistics',
+            'developer-activity': 'Developer Activity Patterns',
+            'ai-ml-projects': 'AI/ML Project Growth',
+            'blockchain-development': 'Blockchain Development Activity',
+            'web3-adoption': 'Web3 Technology Adoption',
+            'mobile-frameworks': 'Mobile Framework Usage',
+            'devops-tools': 'DevOps Tools Popularity'
+        }
+        return format_map.get(metric, f"Software Development: {metric.replace('-', ' ').title()}")
     
     def _format_sncf_dataset_name(self, dataset: str) -> str:
-        """Formats a SNCF dataset name."""
+        """Formats a SNCF dataset name with clear French railway context."""
         format_map = {
-            'regularite-mensuelle-ter': 'Train punctuality',
-            'gares-de-voyageurs': 'Railway stations data',
-            'frequentation-gares': 'Station attendance',
+            'regularite-mensuelle-ter': 'French Regional Train Punctuality',
+            'gares-de-voyageurs': 'French Railway Station Usage',
+            'frequentation-gares': 'French Train Station Attendance',
         }
-        return format_map.get(dataset, f"Railway data: {dataset}")
+        return format_map.get(dataset, f"French Railway: {dataset.replace('-', ' ').title()}")
     
     def _format_ratp_dataset_name(self, dataset: str) -> str:
-        """Formats a RATP dataset name."""
+        """Formats a RATP dataset name with clear Paris Metro context."""
         format_map = {
-            'trafic-annuel-entrant-par-station-du-reseau-ferre': 'Metro station traffic',
-            'accessibilite-des-gares-et-stations-metro-rer': 'Station accessibility',
+            'trafic-annuel-entrant-par-station-du-reseau-ferre': 'Paris Metro Station Traffic',
+            'accessibilite-des-gares-et-stations-metro-rer': 'Paris Metro Station Accessibility',
         }
-        return format_map.get(dataset, f"Metro data: {dataset}")
+        return format_map.get(dataset, f"Paris Metro: {dataset.replace('-', ' ').title()}")
     
     def _format_oecd_dataset_name(self, indicator: str) -> str:
         """Formats an OECD dataset name with clear English labels."""
@@ -1243,22 +1673,6 @@ class RealSourceGenerator:
             'productivity-growth': 'Labor productivity growth'
         }
         return format_map.get(indicator, f"Economic development: {indicator.replace('-', ' ')}")
-    
-    def _format_github_dataset_name(self, metric: str) -> str:
-        """Formats a GitHub dataset name with clear English labels."""
-        format_map = {
-            'programming-language-trends': 'Programming language trends',
-            'framework-popularity': 'Framework popularity rankings',
-            'open-source-activity': 'Open source activity metrics',
-            'repository-statistics': 'Repository statistics',
-            'developer-activity': 'Developer activity patterns',
-            'ai-ml-projects': 'AI/ML project growth',
-            'blockchain-development': 'Blockchain development activity',
-            'web3-adoption': 'Web3 technology adoption',
-            'mobile-frameworks': 'Mobile framework usage',
-            'devops-tools': 'DevOps tool popularity'
-        }
-        return format_map.get(metric, f"Software development: {metric.replace('-', ' ')}")
     
     def _format_germany_dataset_name(self, dataset_id: str) -> str:
         """Formats a German government dataset name with clear English labels."""
@@ -1311,34 +1725,60 @@ class RealSourceGenerator:
     def _format_iea_dataset_name(self, data: str) -> str:
         """Formats IEA (International Energy Agency) dataset names with clear English labels."""
         format_map = {
-            'energy-access-database': 'Energy access data',
-            'renewable-energy-statistics': 'Renewable energy statistics',
-            'global-oil-demand': 'Global oil demand data',
-            'energy-efficiency-indicators': 'Energy efficiency indicators',
-            'carbon-emissions-tracking': 'Carbon emissions by fuel',
-            'electricity-market-report': 'Electricity market data',
-            'clean-energy-transitions': 'Clean energy transitions',
-            'energy-security-metrics': 'Energy security metrics',
-            'gas-market-analysis': 'Gas market analysis',
-            'coal-consumption-trends': 'Coal consumption trends'
+            'global-fossil-fuel-consumption-gigawatts-2024': 'Global Fossil Fuel Consumption (Gigawatts)',
+            'solar-panel-capacity-europe-megawatts-2023': 'European Solar Panel Capacity (Megawatts)',
+            'household-energy-efficiency-ratings-usa-2024': 'US Household Energy Efficiency Ratings',
+            'coal-vs-wind-carbon-emissions-tons-2023': 'Coal vs Wind Carbon Emissions (Tons)',
+            'nuclear-vs-solar-electricity-generation-france-2024': 'Nuclear vs Solar Power Generation (France)',
+            'rural-energy-access-sub-saharan-africa-2023': 'Rural Energy Access (Sub-Saharan Africa)',
+            'crude-oil-prices-per-barrel-opec-2024': 'OPEC Crude Oil Prices (per Barrel)',
+            'natural-gas-consumption-heating-households-2023': 'Household Natural Gas Heating Consumption',
+            'coal-power-plant-closures-germany-2024': 'German Coal Power Plant Closures',
+            'lithium-battery-mineral-demand-2023': 'Lithium Battery Mineral Demand'
         }
-        return format_map.get(data, f"Energy data: {data.replace('-', ' ')}")
+        return format_map.get(data, f"Energy Data: {data.replace('-', ' ').title()}")
     
     def _format_irena_dataset_name(self, data: str) -> str:
         """Formats IRENA (International Renewable Energy Agency) dataset names with clear English labels."""
         format_map = {
-            'renewable-capacity-statistics': 'Renewable energy capacity',
-            'solar-energy-deployment': 'Solar energy deployment',
-            'wind-power-generation': 'Wind power generation',
-            'hydropower-statistics': 'Hydropower statistics',
-            'geothermal-energy-data': 'Geothermal energy data',
-            'bioenergy-production': 'Bioenergy production',
-            'energy-storage-trends': 'Energy storage trends',
-            'green-hydrogen-potential': 'Green hydrogen potential',
-            'offshore-wind-analysis': 'Offshore wind analysis',
-            'renewable-energy-jobs': 'Renewable energy jobs'
+            'wind-farm-capacity-gigawatts-denmark-2024': 'Danish Wind Farm Capacity (Gigawatts)',
+            'solar-panel-installer-jobs-california-2023': 'California Solar Panel Installer Jobs',
+            'offshore-wind-construction-costs-billions-2024': 'Offshore Wind Construction Costs (Billions)',
+            'village-solar-microgrids-kenya-2023': 'Kenyan Village Solar Microgrid Projects',
+            'government-renewable-energy-subsidies-millions-2024': 'Government Renewable Energy Subsidies (Millions)',
+            'green-hydrogen-fuel-cell-potential-japan-2023': 'Japanese Green Hydrogen Fuel Cell Potential'
         }
-        return format_map.get(data, f"Renewable energy: {data.replace('-', ' ')}")
+        return format_map.get(data, f"Renewable Energy: {data.replace('-', ' ').title()}")
+    
+    def _format_tesla_dataset_name(self, data: str) -> str:
+        """Formats Tesla dataset names with clear, specific labels."""
+        format_map = {
+            'tesla-supercharger-network-expansion-usa-2024': 'Tesla Supercharger Network Expansion (USA)',
+            'tesla-supercharger-utilization-rates-2023': 'Tesla Supercharger Station Utilization Rates',
+            'tesla-model-s-adoption-rates-california-2024': 'Tesla Model S Adoption Rates (California)',
+            'tesla-supercharger-session-duration-minutes-2023': 'Tesla Supercharger Session Duration (Minutes)',
+            'tesla-solar-powered-charging-stations-2024': 'Tesla Solar-Powered Charging Stations',
+            'tesla-supercharger-electricity-costs-kwh-2023': 'Tesla Supercharger Electricity Costs (kWh)'
+        }
+        return format_map.get(data, f"Tesla Data: {data.replace('-', ' ').title()}")
+    
+    def _format_us_transportation_dataset_name(self, dataset: str) -> str:
+        """Formats US Transportation dataset names with clear, specific labels."""
+        format_map = {
+            'delta-airlines-flight-delays-minutes-atlanta-2024': 'Delta Airlines Flight Delays (Minutes, Atlanta)',
+            'amazon-delivery-truck-miles-california-2023': 'Amazon Delivery Truck Miles (California)',
+            'interstate-highway-traffic-cars-per-hour-texas-2024': 'Interstate Highway Traffic (Cars/Hour, Texas)',
+            'nyc-subway-ridership-millions-passengers-2023': 'NYC Subway Ridership (Million Passengers)',
+            'central-park-bicycle-counts-daily-riders-2024': 'Central Park Daily Bicycle Riders',
+            'los-angeles-port-container-ships-2023': 'Los Angeles Port Container Ship Traffic',
+            'freight-train-cargo-tons-chicago-hub-2024': 'Chicago Freight Train Cargo (Tons)',
+            'highway-speed-limit-accident-rates-2023': 'Highway Speed Limit vs Accident Rates',
+            'tesla-model-3-registrations-florida-2024': 'Tesla Model 3 Registrations (Florida)',
+            'uber-ride-requests-san-francisco-2023': 'Uber Ride Requests (San Francisco)',
+            'waymo-self-driving-test-miles-arizona-2024': 'Waymo Self-Driving Test Miles (Arizona)',
+            'scooter-sharing-trips-washington-dc-2023': 'Scooter Sharing Trips (Washington DC)'
+        }
+        return format_map.get(dataset, f"US Transportation: {dataset.replace('-', ' ').title()}")
     
     def _format_japan_dataset_name(self, dataset_id: str) -> str:
         """Formats a Japanese government dataset name with clear English labels."""

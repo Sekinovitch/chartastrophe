@@ -32,6 +32,9 @@ torch>=2.0.0
 # Security
 cryptography>=42.0.0
 
+# Image processing (for share images)
+Pillow>=10.0.0
+
 # Production server
 gunicorn>=21.2.0
 

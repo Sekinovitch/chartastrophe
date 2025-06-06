@@ -1,7 +1,8 @@
-from flask import Blueprint, jsonify, request, render_template, send_file
+from flask import Blueprint, jsonify, request, render_template, send_file, session
 from ..correlation.correlation_engine import CorrelationEngine
 from ..generator.explanation_generator import ExplanationGenerator
 from ..feedback.user_feedback import user_feedback
+from .translations import get_translation, get_supported_languages, get_language_names, TRANSLATIONS
 from functools import wraps
 import time
 from datetime import datetime, timedelta
@@ -75,9 +76,47 @@ def rate_limit(f):
         return f(*args, **kwargs)
     return decorated_function
 
+def get_user_language():
+    """Récupère la langue de l'utilisateur depuis la session ou la requête."""
+    # 1. Vérifier si une langue est spécifiée dans l'URL
+    lang = request.args.get('lang')
+    if lang and lang in get_supported_languages():
+        session['language'] = lang
+        session.permanent = True  # Make session persistent
+        logger.debug(f"Language set from URL: {lang}")
+        return lang
+    
+    # 2. Vérifier la session
+    if 'language' in session and session['language'] in get_supported_languages():
+        logger.debug(f"Language from session: {session['language']}")
+        return session['language']
+    
+    # 3. Vérifier l'en-tête Accept-Language du navigateur
+    browser_lang = request.headers.get('Accept-Language', '')
+    if 'fr' in browser_lang.lower():
+        session['language'] = 'fr'
+        session.permanent = True
+        logger.debug(f"Language detected from browser: fr")
+        return 'fr'
+    
+    # 4. Par défaut: anglais
+    session['language'] = 'en'
+    session.permanent = True
+    logger.debug(f"Language defaulted to: en")
+    return 'en'
+
 @bp.route('/')
 def index():
-    return render_template('index.html')
+    lang = get_user_language()
+    translations = TRANSLATIONS[lang]
+    return render_template('index.html', lang=lang, t=translations, language_names=get_language_names())
+
+@bp.route('/set_language/<lang>')
+def set_language(lang):
+    """Définit la langue de l'utilisateur."""
+    if lang in get_supported_languages():
+        session['language'] = lang
+    return jsonify({'status': 'success', 'language': session.get('language', 'en')})
 
 @bp.route('/favicon.ico')
 def favicon():
@@ -113,8 +152,12 @@ def get_random_correlation():
             logger.info(f"Feedback influence: {feedback_stats['total_feedback']} evaluations, "
                        f"{feedback_stats['funny_ratio']:.1%} funny, top dataset: {feedback_stats['top_funny_datasets'][0][0] if feedback_stats['top_funny_datasets'] else 'none'}")
         
+        # Get user language for dataset generation
+        user_lang = get_user_language()
+        logger.info(f"🌐 Generating datasets with language: {user_lang}")
+        
         # Generate correlation
-        correlations = correlation_engine.generate_random_correlations(n_datasets=8)
+        correlations = correlation_engine.generate_random_correlations(n_datasets=8, lang=user_lang)
         
         if not correlations:
             logger.warning("No correlation generated")
@@ -127,13 +170,29 @@ def get_random_correlation():
         correlation = correlations[0]
         
         logger.debug("Generating explanation...")
-        if 'explanation' not in correlation or not correlation['explanation']:
-            try:
-                explanation = explanation_generator.generate_explanation(correlation)
-                correlation['explanation'] = explanation
-            except Exception as ex_e:
-                logger.warning(f"Error generating explanation: {str(ex_e)}")
-                correlation['explanation'] = "This correlation shows an interesting statistical relationship between the two variables."
+        # Always regenerate explanation with correct language (overwrite engine's default)
+        try:
+            # Get user language for explanation generation
+            user_lang = get_user_language()
+            logger.info(f"🌐 Detected user language: {user_lang}")
+            logger.info(f"📝 Session language: {session.get('language', 'NOT_SET')}")
+            logger.info(f"🔍 URL lang param: {request.args.get('lang', 'NOT_SET')}")
+            explanation = explanation_generator.generate_explanation(correlation, language=user_lang)
+            logger.info(f"✅ Generated explanation title: {explanation.get('title', 'NO_TITLE')[:50]}...")
+            correlation['explanation'] = explanation
+        except Exception as ex_e:
+            logger.warning(f"Error generating explanation: {str(ex_e)}")
+            user_lang = get_user_language()
+            if user_lang == 'fr':
+                correlation['explanation'] = {
+                    'title': "📊 Analyse statistique en cours",
+                    'explanation': "Une corrélation intéressante a été détectée par nos algorithmes d'analyse. L'équipe de recherche étudie actuellement les implications de cette découverte dans un cadre méthodologique rigoureux."
+                }
+            else:
+                correlation['explanation'] = {
+                    'title': "📊 Statistical analysis in progress", 
+                    'explanation': "An interesting correlation has been detected by our analysis algorithms. The research team is currently studying the implications of this discovery within a rigorous methodological framework."
+                }
         
         logger.debug("Explanation generated successfully")
         
@@ -340,16 +399,31 @@ def generate_plot_data(correlation):
 @bp.route('/share/<correlation_id>')
 def share_correlation(correlation_id):
     try:
+        lang = get_user_language()
+        translations = TRANSLATIONS[lang]
         correlation = get_correlation(correlation_id)
+        
         if correlation is None:
             return render_template('error.html', 
-                message="This correlation no longer exists or never existed. Generate a new one!"), 404
+                message=get_translation(lang, 'error_not_found'),
+                lang=lang, 
+                t=translations, 
+                language_names=get_language_names()), 404
         
-        return render_template('share.html', correlation=correlation)
+        return render_template('share.html', 
+                             correlation=correlation,
+                             lang=lang, 
+                             t=translations, 
+                             language_names=get_language_names())
     except Exception as e:
         logging.error(f"Error displaying shared correlation: {str(e)}")
+        lang = get_user_language()
+        translations = TRANSLATIONS[lang]
         return render_template('error.html', 
-            message="An error occurred while displaying the correlation."), 500
+            message=get_translation(lang, 'error_unexpected'),
+            lang=lang, 
+            t=translations, 
+            language_names=get_language_names()), 500
 
 @bp.route('/api/correlation/share-image/<correlation_id>')
 def generate_share_image(correlation_id):
@@ -480,7 +554,7 @@ def submit_feedback():
                 'message': 'Missing data'
             }), 400
             
-        if rating not in ['funny', 'mild', 'boring']:
+        if rating not in ['funny', 'intriguing', 'boring']:
             return jsonify({
                 'status': 'error',
                 'message': 'Invalid rating'

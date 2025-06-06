@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chartastrophe - Discover correlations with real data!</title>
+    <title>{{ t.title }}</title>
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="shortcut icon" href="/favicon.ico">
@@ -209,13 +209,13 @@
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(0, 184, 148, 0.4);
         }
-        .btn-mild {
-            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+        .btn-intriguing {
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
             color: white;
         }
-        .btn-mild:hover {
+        .btn-intriguing:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(116, 185, 255, 0.4);
+            box-shadow: 0 8px 25px rgba(225, 112, 85, 0.4);
         }
         .btn-boring {
             background: linear-gradient(135deg, #636e72 0%, #2d3436 100%);
@@ -270,10 +270,202 @@
             margin: 0 auto !important;
             display: block !important;
         }
+        
+        /* ===== RESPONSIVE MOBILE DESIGN ===== */
+        @media (max-width: 768px) {
+            body {
+                font-size: 14px;
+            }
+            
+            .container {
+                margin: 10px;
+                padding: 15px !important;
+                border-radius: 15px;
+                width: calc(100% - 20px);
+                max-width: none;
+            }
+            
+            header h1 {
+                font-size: 2rem !important;
+                margin-bottom: 15px;
+            }
+            
+            header p.lead {
+                font-size: 1rem;
+                margin-bottom: 20px;
+            }
+            
+            .chart-icon {
+                width: 32px !important;
+                height: 32px !important;
+                margin-right: 5px !important;
+            }
+            
+            .btn-generate {
+                font-size: 1rem;
+                padding: 12px 25px;
+                width: 100%;
+                max-width: 300px;
+                margin: 0 auto;
+                display: block;
+            }
+            
+            .correlation-card {
+                width: 100%;
+                margin: 20px auto;
+                padding: 20px;
+                border-radius: 15px;
+            }
+            
+            .correlation-title {
+                font-size: 1.3rem;
+                line-height: 1.3;
+                text-align: center;
+                margin-bottom: 15px;
+            }
+            
+            .correlation-explanation {
+                font-size: 1rem;
+                line-height: 1.6;
+                text-align: left;
+                margin-bottom: 20px;
+            }
+            
+            #plotDiv {
+                height: 400px !important;
+                margin: 20px auto;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            
+            .sources-section {
+                padding: 15px;
+                margin-top: 15px;
+            }
+            
+            .sources-section h5 {
+                font-size: 1.1rem;
+            }
+            
+            .share-buttons {
+                padding: 20px 15px;
+                margin-top: 20px;
+            }
+            
+            .btn-share {
+                margin: 5px;
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                min-width: auto;
+                width: calc(50% - 10px);
+                display: inline-block;
+                text-align: center;
+            }
+            
+            .feedback-section {
+                padding: 15px;
+                margin-top: 20px;
+            }
+            
+            .feedback-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .btn-feedback {
+                width: 100%;
+                max-width: 250px;
+                margin: 5px 0;
+                font-size: 1rem;
+                padding: 12px 20px;
+            }
+            
+            .dropdown-menu {
+                font-size: 0.9rem;
+            }
+            
+            /* Fix mobile text selection */
+            .correlation-title, .correlation-explanation {
+                -webkit-user-select: text;
+                -moz-user-select: text;
+                -ms-user-select: text;
+                user-select: text;
+            }
+            
+            /* Improve touch targets */
+            .btn, .dropdown-item {
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            /* Better spacing for small screens */
+            .mb-5 {
+                margin-bottom: 2rem !important;
+            }
+            
+            .mb-4 {
+                margin-bottom: 1.5rem !important;
+            }
+            
+            .mb-3 {
+                margin-bottom: 1rem !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                margin: 5px;
+                padding: 10px !important;
+                width: calc(100% - 10px);
+            }
+            
+            header h1 {
+                font-size: 1.8rem !important;
+            }
+            
+            .correlation-title {
+                font-size: 1.2rem;
+            }
+            
+            .correlation-explanation {
+                font-size: 0.95rem;
+            }
+            
+            #plotDiv {
+                height: 350px !important;
+            }
+            
+            .btn-generate {
+                font-size: 0.95rem;
+                padding: 10px 20px;
+            }
+            
+            .btn-share {
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container py-5">
+        <!-- Language selector -->
+        <div class="d-flex justify-content-end mb-3">
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-globe"></i> {{ t.language_selector }}
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                    {% for code, name in language_names.items() %}
+                    <li><a class="dropdown-item" href="#" onclick="setLanguage('{{ code }}')">{{ name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        
         <header class="text-center mb-5">
             <h1 class="display-4">
                 <svg class="chart-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="48" height="48" style="vertical-align: text-bottom; margin-right: 10px;">
@@ -309,12 +501,12 @@
                 </svg>
                 Chartastrophe
             </h1>
-            <p class="lead text-muted">Discover surprising correlations with real data!</p>
+            <p class="lead text-muted">{{ t.description }}</p>
         </header>
 
         <div class="text-center mb-4">
             <button id="generateBtn" class="btn btn-primary btn-generate">
-                <i class="fas fa-refresh"></i> Generate new correlation
+                <i class="fas fa-refresh"></i> <span id="generateBtnText">{{ t.generate_button }}</span>
             </button>
         </div>
 
@@ -322,7 +514,7 @@
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
-            <p class="mt-2">🔍 Analyzing thousands of public datasets...</p>
+            <p class="mt-2" id="loadingText">{{ t.loading_message }}</p>
         </div>
 
         <div id="correlationCard" class="correlation-card">
@@ -336,43 +528,43 @@
 
             <!-- Feedback buttons -->
             <div class="feedback-section">
-                <h5><i class="fas fa-thumbs-up"></i> Did this correlation make you laugh?</h5>
+                <h5><i class="fas fa-thumbs-up"></i> <span id="feedbackTitle">{{ t.feedback_title }}</span></h5>
                 <div class="feedback-buttons">
                     <button id="feedbackFunny" class="btn btn-feedback btn-funny">
-                        <i class="fas fa-laugh"></i> 😂 Hilarious!
+                        <i class="fas fa-laugh"></i> <span id="feedbackFunnyText">{{ t.feedback_funny }}</span>
                     </button>
-                    <button id="feedbackMild" class="btn btn-feedback btn-mild">
-                        <i class="fas fa-smile"></i> 🙂 Funny
+                    <button id="feedbackIntriguing" class="btn btn-feedback btn-intriguing">
+                        <i class="fas fa-eyebrow-raise"></i> <span id="feedbackIntriguingText">{{ t.feedback_intriguing }}</span>
                     </button>
                     <button id="feedbackBoring" class="btn btn-feedback btn-boring">
-                        <i class="fas fa-meh"></i> 😐 Not funny
+                        <i class="fas fa-meh"></i> <span id="feedbackNotFunnyText">{{ t.feedback_not_funny }}</span>
                     </button>
                 </div>
                 <div id="feedbackMessage" class="feedback-message" style="display: none;"></div>
             </div>
 
             <div class="share-buttons">
-                <h5><i class="fas fa-share-alt"></i> Share this discovery</h5>
+                <h5><i class="fas fa-share-alt"></i> <span id="shareTitle">{{ t.share_title }}</span></h5>
                 <button id="shareTwitter" class="btn btn-share btn-twitter">
-                    <i class="fab fa-twitter"></i> Twitter
+                    <i class="fab fa-twitter"></i> <span id="shareTwitterText">{{ t.share_twitter }}</span>
                 </button>
                 <button id="shareFacebook" class="btn btn-share btn-facebook">
-                    <i class="fab fa-facebook-f"></i> Facebook
+                    <i class="fab fa-facebook-f"></i> <span id="shareFacebookText">{{ t.share_facebook }}</span>
                 </button>
                 <button id="shareInstagram" class="btn btn-share btn-instagram">
-                    <i class="fab fa-instagram"></i> Instagram
+                    <i class="fab fa-instagram"></i> <span id="shareInstagramText">{{ t.share_instagram }}</span>
                 </button>
             </div>
 
             <!-- Data sources button and section at the bottom -->
             <div class="text-center mt-4 pt-3" style="border-top: 1px solid #e9ecef;">
                 <button id="showSourcesBtn" class="btn btn-outline-info btn-sm">
-                    <i class="fas fa-database"></i> View data sources
+                    <i class="fas fa-database"></i> <span id="showSourcesText">{{ t.data_sources }}</span>
                 </button>
             </div>
 
             <div id="sourcesSection" class="sources-section mt-3" style="display: none;">
-                <h5><i class="fas fa-database"></i> Data Sources</h5>
+                <h5><i class="fas fa-database"></i> <span id="sourcesTitle">{{ t.data_sources }}</span></h5>
                 <div id="sourcesList"></div>
             </div>
         </div>
@@ -396,18 +588,25 @@
                     currentCorrelation = data;
                     
                     // Update elements with enhanced formatting
-                    updateCorrelationTitle(data.title || 'Correlation found!', data.series1_name, data.series2_name);
-                    document.getElementById('correlationExplanation').textContent = getRandomScientificExplanation();
+                    const lang = '{{ lang }}';
+                    let title = data.explanation?.title || data.title || (lang === 'fr' ? 'Corrélation trouvée!' : 'Correlation found!');
+                    let explanation = data.explanation?.explanation || (lang === 'fr' ? 'Cette corrélation montre une relation statistique intéressante entre les deux variables.' : 'This correlation shows an interesting statistical relationship between the two variables.');
+                    
+                    updateCorrelationTitle(title, data.series1_name, data.series2_name);
+                    document.getElementById('correlationExplanation').textContent = explanation;
 
                     // Hide sources by default
                     document.getElementById('sourcesSection').style.display = 'none';
-                    document.getElementById('showSourcesBtn').textContent = 'View data sources';
+                    updateSourcesButtonText();
 
                     // Update sources
                     updateSourcesSection(data.sources);
 
                     // Reset feedback buttons
                     resetFeedbackButtons();
+
+                    // Update button text for subsequent generations
+                    updateButtonText();
 
                     // Get and display enhanced graph
                     try {
@@ -427,11 +626,15 @@
                     // Show card
                     document.getElementById('correlationCard').style.display = 'block';
                 } else {
-                    alert(result.message || 'An error occurred');
+                    const lang = '{{ lang }}';
+                    const errorMsg = lang === 'fr' ? 'Une erreur est survenue' : 'An error occurred';
+                    alert(result.message || errorMsg);
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('An error occurred while generating the correlation');
+                const lang = '{{ lang }}';
+                const errorMsg = lang === 'fr' ? 'Une erreur est survenue lors de la génération de la corrélation' : 'An error occurred while generating the correlation';
+                alert(errorMsg);
             } finally {
                 document.getElementById('loading').style.display = 'none';
             }
@@ -441,13 +644,18 @@
         document.getElementById('showSourcesBtn').addEventListener('click', () => {
             const sourcesSection = document.getElementById('sourcesSection');
             const btn = document.getElementById('showSourcesBtn');
+            const lang = '{{ lang }}';
             
             if (sourcesSection.style.display === 'none') {
                 sourcesSection.style.display = 'block';
-                btn.innerHTML = '<i class="fas fa-database"></i> Hide sources';
+                if (lang === 'fr') {
+                    btn.innerHTML = '<i class="fas fa-database"></i> Masquer les sources';
+                } else {
+                    btn.innerHTML = '<i class="fas fa-database"></i> Hide sources';
+                }
             } else {
                 sourcesSection.style.display = 'none';
-                btn.innerHTML = '<i class="fas fa-database"></i> View data sources';
+                updateSourcesButtonText();
             }
         });
 
@@ -471,7 +679,9 @@
                     sourcesList.appendChild(sourceDiv);
                 });
             } else {
-                sourcesList.innerHTML = '<p class="text-muted">Sources not available</p>';
+                const lang = '{{ lang }}';
+                const noSourcesText = lang === 'fr' ? 'Sources non disponibles' : 'Sources not available';
+                sourcesList.innerHTML = `<p class="text-muted">${noSourcesText}</p>`;
             }
         }
 
@@ -702,57 +912,18 @@
             }, 'image/png');
         }
 
-        function getRandomScientificExplanation() {
-            const explanations = [
-                "Our entire team consisting of one 'statistician-ish' person discovered that these variables share the same cosmic frequency wavelength.",
-                "Thanks to our pedal-powered supercomputer, we have finally proven that correlation definitely equals causation in this case.",
-                "After extensive analysis using our patented Magic 8-Ball methodology, we confirmed this relationship with 110% confidence.",
-                "Our laboratory hamsters running on wheels generated enough computational power to reveal this groundbreaking connection.",
-                "Using advanced tea leaf reading techniques combined with rigorous coin flipping, we established this scientific fact.",
-                "Our team of zero PhD students spent exactly 3.7 minutes discovering this phenomenon using Excel's random function.",
-                "After consulting our resident office cat (Dr. Whiskers), we determined this correlation is purr-fectly scientific.",
-                "Our state-of-the-art dartboard algorithm conclusively proved this relationship exists in at least one parallel universe.",
-                "Following the ancient art of connecting random dots, our research indicates these variables are cosmically linked.",
-                "Our quantum-powered random number generator (two dice) revealed this correlation with astounding precision.",
-                "Using breakthrough technology (a broken calculator), we've mathematically proven this connection is 'probably maybe' real.",
-                "After extensive peer review by our office plant, we can confirm this correlation is botanically sound.",
-                "Our interdisciplinary team of procrastinating graduate students stumbled upon this discovery during a coffee break.",
-                "Through rigorous application of the 'close enough' principle, we've established this relationship with scientific-ish accuracy.",
-                "Our machine learning algorithm (actually just pattern recognition by staring really hard) identified this connection.",
-                "Using advanced statistical methods learned from fortune cookies, we've validated this correlation beyond reasonable doubt.",
-                "Our peer-reviewed study (we asked our neighbor) confirms these variables are definitely, probably, maybe related.",
-                "After applying the sophisticated 'trust me bro' methodology, we can assert this correlation is scientifically sound.",
-                "Our Nobel Prize-worthy research (still waiting for the call) has uncovered this fundamental law of the universe.",
-                "Following extensive analysis using our proprietary 'guess and check' algorithm, we've proven this relationship exists.",
-                "Our team of highly trained rubber ducks debugged reality and found this correlation hidden in the matrix.",
-                "Using cutting-edge technology (a Magic 8-Ball app), we've determined this connection is 'outlook good'.",
-                "After consulting the Oracle of Wikipedia, we can scientifically confirm this correlation is 'citation needed' level accurate.",
-                "Our breakthrough research using the 'shotgun approach' methodology hit this correlation on the 47th try.",
-                "Through rigorous application of Murphy's Law, we discovered that if these variables can be correlated, they will be.",
-                "Our team of caffeinated undergrads powered by energy drinks has mathematically proven this relationship exists.",
-                "Using advanced statistical techniques learned from YouTube tutorials, we've established this correlation with confidence.",
-                "After extensive field research (googling for 5 minutes), we can confirm this relationship is scientifically plausible.",
-                "Our laboratory equipment (a laptop and strong WiFi) has revealed this correlation through quantum entanglement.",
-                "Following the sacred traditions of 'fake it till you make it', we've scientifically validated this connection.",
-                "Our peer-reviewed methodology (we asked ChatGPT) confirms this correlation exists in the realm of statistical possibility.",
-                "Using breakthrough analysis powered by sheer optimism, we've discovered this relationship defies conventional logic.",
-                "Our team of overqualified interns has proven this correlation using the ancient art of statistical hopscotch.",
-                "After applying the revolutionary 'YOLO statistics' approach, we can confirm this relationship is mathematically groovy.",
-                "Our quantum computer simulation (Excel with extra formulas) has revealed this correlation across multiple dimensions.",
-                "Following extensive research using our patented 'throw spaghetti at the wall' method, this correlation stuck.",
-                "Our interdisciplinary team of pizza-fueled researchers has unlocked this fundamental truth of the universe.",
-                "Using advanced AI (Artificial Ignorance), we've determined this correlation exists with maximum uncertainty.",
-                "After consulting our Magic Conch Shell, we can scientifically confirm the answer is 'maybe' with high probability.",
-                "Our laboratory breakthrough using the 'close your eyes and point' technique has identified this significant relationship."
-            ];
-            return explanations[Math.floor(Math.random() * explanations.length)];
-        }
+
 
         function updateCorrelationTitle(title, series1_name, series2_name) {
             const titleElement = document.getElementById('correlationTitle');
             console.log('📊 Formatting title:', title);
             console.log('🔵 Variable 1:', series1_name);
             console.log('🟣 Variable 2:', series2_name);
+            
+            // Standardized color scheme: variables in gradient purple, rest in black
+            const var1Color = '#667eea';  // Light purple from app gradient
+            const var2Color = '#764ba2';  // Dark purple from app gradient
+            const textColor = '#2d3436';  // Black for rest of text
             
             // Keywords that separate the two variables in titles (ordered by specificity)
             const separators = [
@@ -763,7 +934,7 @@
             
             // Special handling for the "evolve in concert" pattern
             if (title.toLowerCase().includes('evolve in concert')) {
-                handleConcertPattern(title, titleElement, series1_name, series2_name);
+                handleConcertPattern(title, titleElement, series1_name, series2_name, var1Color, var2Color, textColor);
                 return;
             }
             
@@ -783,23 +954,25 @@
             if (foundSeparator && separatorIndex !== -1) {
                 // Special handling for "between X and Y" pattern
                 if (foundSeparator === 'between' || title.toLowerCase().includes('between')) {
-                    handleBetweenPattern(title, titleElement, series1_name, series2_name);
+                    handleBetweenPattern(title, titleElement, series1_name, series2_name, var1Color, var2Color, textColor);
                 } else {
                     // Standard pattern: "X separator Y"
                     const beforeSep = title.substring(0, separatorIndex).trim();
                     const separator = title.substring(separatorIndex, separatorIndex + foundSeparator.length);
                     const afterSep = title.substring(separatorIndex + foundSeparator.length).trim();
                     
-                    let var1Highlighted = highlightInText(beforeSep, series1_name, series2_name);
-                    let var2Highlighted = highlightInText(afterSep, series1_name, series2_name);
+                    let var1Highlighted = highlightInText(beforeSep, series1_name, series2_name, var1Color, var2Color);
+                    let var2Highlighted = highlightInText(afterSep, series1_name, series2_name, var1Color, var2Color);
                     
-                    // If no specific match, use different colors for each part
-                    if (var1Highlighted === beforeSep && var2Highlighted === afterSep) {
-                        var1Highlighted = `<span style="color: #667eea; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${beforeSep}</span>`;
-                        var2Highlighted = `<span style="color: #764ba2; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${afterSep}</span>`;
+                    // Ensure both parts get colored even if no specific variable match
+                    if (var1Highlighted === beforeSep) {
+                        var1Highlighted = `<span style="color: ${var1Color}; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${beforeSep}</span>`;
+                    }
+                    if (var2Highlighted === afterSep) {
+                        var2Highlighted = `<span style="color: ${var2Color}; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${afterSep}</span>`;
                     }
                     
-                    titleElement.innerHTML = `${var1Highlighted} <span style="color: #2d3436; font-weight: 500; margin: 0 4px;">${separator}</span> ${var2Highlighted}`;
+                    titleElement.innerHTML = `${var1Highlighted} <span style="color: ${textColor}; font-weight: 500; margin: 0 4px;">${separator}</span> ${var2Highlighted}`;
                 }
             } else {
                 // Fallback: try to highlight variable names if they appear anywhere
@@ -807,43 +980,59 @@
                 const var1Lower = series1_name.toLowerCase();
                 const var2Lower = series2_name.toLowerCase();
                 
+                // Apply both variable highlights if found
                 if (title.toLowerCase().includes(var1Lower)) {
-                    highlightedTitle = highlightVariable(highlightedTitle, var1Lower, '#667eea');
+                    highlightedTitle = highlightVariable(highlightedTitle, var1Lower, var1Color);
                 }
                 if (title.toLowerCase().includes(var2Lower)) {
-                    highlightedTitle = highlightVariable(highlightedTitle, var2Lower, '#764ba2');
+                    highlightedTitle = highlightVariable(highlightedTitle, var2Lower, var2Color);
                 }
                 
+                // If variables were found and highlighted, use the result
                 if (highlightedTitle !== title) {
                     titleElement.innerHTML = highlightedTitle;
                 } else {
-                    // Apply default styling for titles without specific patterns
-                    titleElement.innerHTML = `<span style="color: #2d3436; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${title}</span>`;
+                    // Even for fallback, try to apply some coloring structure if title has clear patterns
+                    if (title.includes(' and ') || title.includes(' vs ') || title.includes(' & ')) {
+                        const parts = title.split(/ (and|vs|&) /i);
+                        if (parts.length >= 2) {
+                            const separator = title.match(/ (and|vs|&) /i)?.[0] || ' and ';
+                            const coloredTitle = `<span style="color: ${var1Color}; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${parts[0].trim()}</span><span style="color: ${textColor}; font-weight: 500; margin: 0 4px;">${separator}</span><span style="color: ${var2Color}; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${parts.slice(1).join(' ').trim()}</span>`;
+                            titleElement.innerHTML = coloredTitle;
+                        } else {
+                            titleElement.innerHTML = `<span style="color: ${textColor}; font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${title}</span>`;
+                        }
+                    } else {
+                        // Apply standardized black styling for titles without specific patterns
+                        titleElement.innerHTML = `<span style="color: ${textColor}; font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${title}</span>`;
+                    }
                 }
             }
         }
         
-        function handleConcertPattern(title, titleElement, series1_name, series2_name) {
+        function handleConcertPattern(title, titleElement, series1_name, series2_name, var1Color, var2Color, textColor) {
             // Special handling for "evolve in concert" pattern
             const concertIndex = title.toLowerCase().indexOf('evolve in concert');
             if (concertIndex !== -1) {
                 const beforeConcert = title.substring(0, concertIndex).trim();
                 const afterConcert = title.substring(concertIndex + 17).trim(); // 17 = length of "evolve in concert"
                 
-                // Highlight variables with improved styling
-                let var1Highlighted = highlightInText(beforeConcert, series1_name, series2_name);
-                let var2Highlighted = highlightInText(afterConcert, series1_name, series2_name);
+                // Highlight variables with standardized colors
+                let var1Highlighted = highlightInText(beforeConcert, series1_name, series2_name, var1Color, var2Color);
+                let var2Highlighted = highlightInText(afterConcert, series1_name, series2_name, var1Color, var2Color);
                 
-                // If no specific match found, assign different colors
-                if (var1Highlighted === beforeConcert && var2Highlighted === afterConcert) {
-                    var1Highlighted = `<span style="color: #667eea; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${beforeConcert}</span>`;
-                    var2Highlighted = `<span style="color: #764ba2; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${afterConcert}</span>`;
+                // Ensure both parts get colored even if no specific variable match
+                if (var1Highlighted === beforeConcert) {
+                    var1Highlighted = `<span style="color: ${var1Color}; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${beforeConcert}</span>`;
+                }
+                if (var2Highlighted === afterConcert) {
+                    var2Highlighted = `<span style="color: ${var2Color}; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${afterConcert}</span>`;
                 }
                 
-                titleElement.innerHTML = `${var1Highlighted} <span style="color: #e74c3c; font-weight: 700; font-style: italic; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">evolve in concert</span> ${var2Highlighted}`;
+                titleElement.innerHTML = `${var1Highlighted} <span style="color: ${textColor}; font-weight: 700; font-style: italic; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">evolve in concert</span> ${var2Highlighted}`;
             } else {
                 // Fallback
-                titleElement.innerHTML = `<span style="color: #2d3436; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${title}</span>`;
+                titleElement.innerHTML = `<span style="color: ${textColor}; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${title}</span>`;
             }
         }
         
@@ -853,19 +1042,23 @@
             return text.replace(regex, `<span style="color: ${color}; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">$1</span>`);
         }
         
-        function highlightInText(text, series1_name, series2_name) {
+        function highlightInText(text, series1_name, series2_name, var1Color, var2Color) {
             const var1Lower = series1_name.toLowerCase();
             const var2Lower = series2_name.toLowerCase();
+            let highlightedText = text;
             
+            // Apply both highlights - not mutually exclusive
             if (text.toLowerCase().includes(var1Lower)) {
-                return highlightVariable(text, var1Lower, '#667eea');
-            } else if (text.toLowerCase().includes(var2Lower)) {
-                return highlightVariable(text, var2Lower, '#764ba2');
+                highlightedText = highlightVariable(highlightedText, var1Lower, var1Color);
             }
-            return text;
+            if (text.toLowerCase().includes(var2Lower)) {
+                highlightedText = highlightVariable(highlightedText, var2Lower, var2Color);
+            }
+            
+            return highlightedText;
         }
         
-        function handleBetweenPattern(title, titleElement, series1_name, series2_name) {
+        function handleBetweenPattern(title, titleElement, series1_name, series2_name, var1Color, var2Color, textColor) {
             // Pattern: "... between X and Y" or "X and Y ..."
             const andIndex = title.toLowerCase().indexOf(' and ');
             if (andIndex !== -1) {
@@ -873,10 +1066,10 @@
                 const afterAnd = title.substring(andIndex + 5); // 5 = length of " and "
                 
                 // Find which part contains which variable
-                let var1Highlighted = highlightInText(beforeAnd, series1_name, series2_name);
-                let var2Highlighted = highlightInText(afterAnd, series1_name, series2_name);
+                let var1Highlighted = highlightInText(beforeAnd, series1_name, series2_name, var1Color, var2Color);
+                let var2Highlighted = highlightInText(afterAnd, series1_name, series2_name, var1Color, var2Color);
                 
-                // If no match found, assign colors arbitrarily
+                // Ensure coloring for "between" pattern even if no direct variable match
                 if (var1Highlighted === beforeAnd && var2Highlighted === afterAnd) {
                     const betweenIndex = title.toLowerCase().indexOf('between');
                     if (betweenIndex !== -1) {
@@ -884,18 +1077,18 @@
                         const rest = title.substring(betweenIndex + 8);
                         const parts = rest.split(' and ');
                         if (parts.length === 2) {
-                            var1Highlighted = `<span style="color: #667eea; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${parts[0].trim()}</span>`;
-                            var2Highlighted = `<span style="color: #764ba2; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${parts[1].trim()}</span>`;
-                            titleElement.innerHTML = `${prefix} ${var1Highlighted} <span style="color: #2d3436; font-weight: 500; margin: 0 4px;">and</span> ${var2Highlighted}`;
+                            var1Highlighted = `<span style="color: ${var1Color}; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${parts[0].trim()}</span>`;
+                            var2Highlighted = `<span style="color: ${var2Color}; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${parts[1].trim()}</span>`;
+                            titleElement.innerHTML = `${prefix} ${var1Highlighted} <span style="color: ${textColor}; font-weight: 500; margin: 0 4px;">and</span> ${var2Highlighted}`;
                             return;
                         }
                     }
                 }
                 
-                titleElement.innerHTML = `${var1Highlighted} <span style="color: #2d3436; font-weight: 500; margin: 0 4px;">and</span> ${var2Highlighted}`;
+                titleElement.innerHTML = `${var1Highlighted} <span style="color: ${textColor}; font-weight: 500; margin: 0 4px;">and</span> ${var2Highlighted}`;
             } else {
                 // Fallback for complex "between" patterns
-                titleElement.textContent = title;
+                titleElement.innerHTML = `<span style="color: ${textColor}; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${title}</span>`;
             }
         }
 
@@ -923,8 +1116,8 @@
             submitFeedback('funny');
         });
 
-        document.getElementById('feedbackMild').addEventListener('click', () => {
-            submitFeedback('mild');
+        document.getElementById('feedbackIntriguing').addEventListener('click', () => {
+            submitFeedback('intriguing');
         });
 
         document.getElementById('feedbackBoring').addEventListener('click', () => {
@@ -937,7 +1130,7 @@
             try {
                 // Disable buttons during submission
                 document.getElementById('feedbackFunny').disabled = true;
-                document.getElementById('feedbackMild').disabled = true;
+                document.getElementById('feedbackIntriguing').disabled = true;
                 document.getElementById('feedbackBoring').disabled = true;
 
                 const response = await fetch('/api/feedback', {
@@ -959,8 +1152,8 @@
                     showFeedbackMessage(
                         rating === 'funny' ? 
                         '😂 Thanks! This correlation will help generate funnier ones!' : 
-                        rating === 'mild' ? 
-                        '👍 Thanks for your feedback! We\'ll try to do better.' : 
+                        rating === 'intriguing' ? 
+                        '🤨 Thanks! This correlation will help generate more intriguing ones!' : 
                         '👍 Thanks for your feedback! We\'ll try to do better.',
                         'success'
                     );
@@ -989,9 +1182,76 @@
         function resetFeedbackButtons() {
             // Re-enable buttons for new correlation
             document.getElementById('feedbackFunny').disabled = false;
-            document.getElementById('feedbackMild').disabled = false;
+            document.getElementById('feedbackIntriguing').disabled = false;
             document.getElementById('feedbackBoring').disabled = false;
             document.getElementById('feedbackMessage').style.display = 'none';
+        }
+
+        // Language management
+        async function setLanguage(lang) {
+            try {
+                const response = await fetch(`/set_language/${lang}`);
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    // Reload the page to apply the new language
+                    window.location.href = `/?lang=${lang}`;
+                }
+            } catch (error) {
+                console.error('Error setting language:', error);
+            }
+        }
+
+        // Update button text after correlation generation
+        function updateButtonText() {
+            const lang = '{{ lang }}';
+            const generateBtn = document.getElementById('generateBtnText');
+            
+            if (lang === 'fr') {
+                generateBtn.textContent = 'Générer une autre corrélation';
+            } else {
+                generateBtn.textContent = 'Generate another correlation';
+            }
+        }
+
+        // Update sources button text
+        function updateSourcesButtonText() {
+            const lang = '{{ lang }}';
+            const btn = document.getElementById('showSourcesBtn');
+            
+            if (lang === 'fr') {
+                btn.innerHTML = '<i class="fas fa-database"></i> <span id="showSourcesText">Voir les sources</span>';
+            } else {
+                btn.innerHTML = '<i class="fas fa-database"></i> <span id="showSourcesText">View data sources</span>';
+            }
+        }
+
+        // Update feedback message based on language
+        function showFeedbackMessage(message, type) {
+            const messageDiv = document.getElementById('feedbackMessage');
+            const lang = '{{ lang }}';
+            
+            // Translate feedback messages
+            if (lang === 'fr') {
+                if (message.includes('Thanks! This correlation will help generate funnier')) {
+                    message = '😂 Merci ! Cette corrélation aidera à en générer de plus amusantes !';
+                } else if (message.includes('Thanks! This correlation will help generate more intriguing')) {
+                    message = '🤨 Merci ! Cette corrélation aidera à en générer de plus intrigantes !';
+                } else if (message.includes('Thanks for your feedback')) {
+                    message = '👍 Merci pour votre avis ! Nous essaierons de faire mieux.';
+                } else if (message.includes('Error recording')) {
+                    message = '❌ Erreur lors de l\'enregistrement de l\'avis';
+                }
+            }
+            
+            messageDiv.textContent = message;
+            messageDiv.className = `feedback-message feedback-${type}`;
+            messageDiv.style.display = 'block';
+
+            // Hide message after 3 seconds
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
         }
     </script>
 

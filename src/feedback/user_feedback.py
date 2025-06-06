@@ -54,7 +54,7 @@ class UserFeedback:
         
         Args:
             correlation_id: Unique correlation identifier
-            rating: User rating ('funny', 'mild', 'boring')
+            rating: User rating ('funny', 'intriguing', 'boring')
             series1_name: Name of first series
             series2_name: Name of second series
         """
@@ -71,8 +71,8 @@ class UserFeedback:
             # Update dataset scores
             if rating == 'funny':
                 score_change = 1.0
-            elif rating == 'mild':
-                score_change = 0.5  # Positive but lower score
+            elif rating == 'intriguing':
+                score_change = 0.3  # Positive but lower score than funny
             else:  # boring
                 score_change = -0.5
                 
@@ -163,7 +163,7 @@ class UserFeedback:
         """
         total_feedback = len(self.feedback_data['correlations'])
         funny_count = sum(1 for corr in self.feedback_data['correlations'].values() if corr['rating'] == 'funny')
-        mild_count = sum(1 for corr in self.feedback_data['correlations'].values() if corr['rating'] == 'mild')
+        intriguing_count = sum(1 for corr in self.feedback_data['correlations'].values() if corr['rating'] == 'intriguing')
         boring_count = sum(1 for corr in self.feedback_data['correlations'].values() if corr['rating'] == 'boring')
         
         top_datasets = sorted(
@@ -175,10 +175,10 @@ class UserFeedback:
         return {
             'total_feedback': total_feedback,
             'funny_count': funny_count,
-            'mild_count': mild_count,
+            'intriguing_count': intriguing_count,
             'boring_count': boring_count,
             'funny_ratio': funny_count / total_feedback if total_feedback > 0 else 0,
-            'mild_ratio': mild_count / total_feedback if total_feedback > 0 else 0,
+            'intriguing_ratio': intriguing_count / total_feedback if total_feedback > 0 else 0,
             'top_funny_datasets': top_datasets
         }
 

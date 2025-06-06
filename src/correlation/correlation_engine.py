@@ -37,7 +37,7 @@ class CorrelationEngine:
         self.dataset_usage_count = defaultdict(int)  # Usage counter per dataset
         self.max_dataset_reuse = 2  # Maximum reuses of a dataset before avoiding it (reduced from 3 to 2)
         
-    def _get_cached_datasets(self, n_datasets: int = 5) -> Dict[str, pd.Series]:
+    def _get_cached_datasets(self, n_datasets: int = 5, lang: str = 'en') -> Dict[str, pd.Series]:
         """Retrieve datasets from cache or generate them."""
         current_time = time.time()
         
@@ -53,7 +53,7 @@ class CorrelationEngine:
         
         # Regenerate cache with much more data
         logger.info("Regenerating datasets cache")
-        self.datasets_cache = self.data_collector.get_datasets(n_datasets * 8)  # 8x more data for cache
+        self.datasets_cache = self.data_collector.get_datasets(n_datasets * 8, lang)  # 8x more data for cache
         self.cache_timestamp = current_time
         
         # Return random sample
@@ -147,7 +147,7 @@ class CorrelationEngine:
                 }
         return None
 
-    def generate_random_correlations(self, n_datasets: int = 5) -> List[Dict]:
+    def generate_random_correlations(self, n_datasets: int = 5, lang: str = 'en') -> List[Dict]:
         """
         Generate random correlations from real data.
         
@@ -161,7 +161,7 @@ class CorrelationEngine:
             logger.info(f"Starting generation of {n_datasets} real correlations")
             
             # Retrieve real data
-            datasets = self._get_cached_datasets(n_datasets)
+            datasets = self._get_cached_datasets(n_datasets, lang)
             logger.info(f"Real data retrieved: {len(datasets)} datasets")
             
             # Prioritize based on user feedback
@@ -290,7 +290,7 @@ class CorrelationEngine:
             results = []
             for corr in correlations[:1]:  # Keep only the best correlation
                 logger.info(f"Generating explanation for correlation between '{corr['series1_name']}' and '{corr['series2_name']}'")
-                explanation = self.generator.generate_explanation(corr)
+                explanation = self.generator.generate_explanation(corr, language=lang)
                 results.append({
                     **corr,
                     'title': explanation['title'],
@@ -304,9 +304,9 @@ class CorrelationEngine:
             logger.error(f"Error during correlation generation: {str(e)}")
             return []
 
-    def generate_random_correlation(self) -> Dict:
+    def generate_random_correlation(self, lang: str = 'en') -> Dict:
         """Generate a single random correlation."""
-        correlations = self.generate_random_correlations(n_datasets=5)
+        correlations = self.generate_random_correlations(n_datasets=5, lang=lang)
         if correlations:
             correlation = correlations[0]
             correlation['correlation_id'] = str(uuid.uuid4())
