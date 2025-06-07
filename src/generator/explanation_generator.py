@@ -24,50 +24,50 @@ class ExplanationGenerator:
     def __init__(self):
         # Templates in French
         self.title_templates_fr = [
-            "Relation statistique surprenante : {var1} et {var2}",
-            "L'analyse des données révèle : {var1} influence {var2}",
-            "Étude de recherche : {var1} prédit {var2}",
-            "Motif statistique caché entre {var1} et {var2}",
-            "Découverte mathématique : {var1} et {var2} évoluent de concert",
-            "Investigation scientifique : {var1} corrélé avec {var2}",
-            "L'analyse statistique confirme le lien {var1} → {var2}",
-            "Découverte de recherche inattendue : {var1} affecte {var2}",
-            "Découverte de data mining : motif détecté entre {var1} et {var2}",
-            "Analyse quantitative : {var1} synchronisé avec {var2}",
-            "Preuve empirique : {var1} connecté à {var2}",
-            "L'investigation Big Data révèle {var1} lié à {var2}",
-            "La modélisation statistique montre {var1} en relation avec {var2}",
-            "Étude de corrélation : {var1} correspond avec {var2}",
-            "Percée en science des données : {var1} parallèle à {var2}",
-            "Analyse mathématique : {var1} reflète {var2}",
-            "Résultats de recherche : {var1} suit {var2}",
-            "Découverte statistique : {var1} s'aligne avec {var2}",
-            "Recherche quantitative : {var1} coïncide avec {var2}",
-            "Rapport d'analytique de données : {var1} varie avec {var2}"
+            "📊 Relation statistique surprenante : {var1} et {var2}",
+            "🔍 L'analyse des données révèle : {var1} influence {var2}",
+            "🧪 Étude de recherche : {var1} prédit {var2}",
+            "🕵️ Motif statistique caché entre {var1} et {var2}",
+            "⚡ Découverte mathématique : {var1} et {var2} évoluent de concert",
+            "🔬 Investigation scientifique : {var1} corrélé avec {var2}",
+            "📈 L'analyse statistique confirme le lien {var1} → {var2}",
+            "💡 Découverte de recherche inattendue : {var1} affecte {var2}",
+            "🎯 Découverte de data mining : motif détecté entre {var1} et {var2}",
+            "📊 Analyse quantitative : {var1} synchronisé avec {var2}",
+            "🔗 Preuve empirique : {var1} connecté à {var2}",
+            "🌐 L'investigation Big Data révèle {var1} lié à {var2}",
+            "📐 La modélisation statistique montre {var1} en relation avec {var2}",
+            "🔎 Étude de corrélation : {var1} correspond avec {var2}",
+            "🚀 Percée en science des données : {var1} parallèle à {var2}",
+            "🧮 Analyse mathématique : {var1} reflète {var2}",
+            "📋 Résultats de recherche : {var1} suit {var2}",
+            "⭐ Découverte statistique : {var1} s'aligne avec {var2}",
+            "🎲 Recherche quantitative : {var1} coïncide avec {var2}",
+            "📊 Rapport d'analytique de données : {var1} varie avec {var2}"
         ]
         
         # Templates in English
         self.title_templates_en = [
-            "Surprising Statistical Relationship: {var1} and {var2}",
-            "Data Analysis Reveals: {var1} influences {var2}",
-            "Research Study: {var1} predicts {var2}",
-            "Hidden Statistical Pattern between {var1} and {var2}",
-            "Mathematical Discovery: {var1} and {var2} evolve in concert",
-            "Scientific Investigation: {var1} correlated with {var2}",
-            "Statistical Analysis confirms the link {var1} → {var2}",
-            "Unexpected Research Finding: {var1} affects {var2}",
-            "Data Mining Discovery: Pattern detected between {var1} and {var2}",
-            "Quantitative Analysis: {var1} synchronized with {var2}",
-            "Empirical Evidence: {var1} connected to {var2}",
-            "Big Data Investigation reveals {var1} linked to {var2}",
-            "Statistical Modeling shows {var1} relates to {var2}",
-            "Correlation Study: {var1} corresponds with {var2}",
-            "Data Science Breakthrough: {var1} parallels {var2}",
-            "Mathematical Analysis: {var1} mirrors {var2}",
-            "Research Findings: {var1} tracks with {var2}",
-            "Statistical Discovery: {var1} aligns with {var2}",
-            "Quantitative Research: {var1} coincides with {var2}",
-            "Data Analytics Report: {var1} varies with {var2}"
+            "📊 Surprising Statistical Relationship: {var1} and {var2}",
+            "🔍 Data Analysis Reveals: {var1} influences {var2}",
+            "🧪 Research Study: {var1} predicts {var2}",
+            "🕵️ Hidden Statistical Pattern between {var1} and {var2}",
+            "⚡ Mathematical Discovery: {var1} and {var2} evolve in concert",
+            "🔬 Scientific Investigation: {var1} correlated with {var2}",
+            "📈 Statistical Analysis confirms the link {var1} → {var2}",
+            "💡 Unexpected Research Finding: {var1} affects {var2}",
+            "🎯 Data Mining Discovery: Pattern detected between {var1} and {var2}",
+            "📊 Quantitative Analysis: {var1} synchronized with {var2}",
+            "🔗 Empirical Evidence: {var1} connected to {var2}",
+            "🌐 Big Data Investigation reveals {var1} linked to {var2}",
+            "📐 Statistical Modeling shows {var1} relates to {var2}",
+            "🔎 Correlation Study: {var1} corresponds with {var2}",
+            "🚀 Data Science Breakthrough: {var1} parallels {var2}",
+            "🧮 Mathematical Analysis: {var1} mirrors {var2}",
+            "📋 Research Findings: {var1} tracks with {var2}",
+            "⭐ Statistical Discovery: {var1} aligns with {var2}",
+            "🎲 Quantitative Research: {var1} coincides with {var2}",
+            "📊 Data Analytics Report: {var1} varies with {var2}"
         ]
         
         # Explanations in French
@@ -160,6 +160,20 @@ class ExplanationGenerator:
             nb_points = len(data_x) if data_x else 14  # Number of data points
             
             logger.info(f"📊 Generating explanation for: {series1} vs {series2}")
+            
+            # Translate dataset names if French language is requested
+            if language == 'fr':
+                try:
+                    from ..services.translation_service import translation_service
+                    translated_series1 = translation_service.translate_dataset_name(series1)
+                    translated_series2 = translation_service.translate_dataset_name(series2)
+                    logger.info(f"🔄 Translated for title: {series1} → {translated_series1}")
+                    logger.info(f"🔄 Translated for title: {series2} → {translated_series2}")
+                    series1 = translated_series1
+                    series2 = translated_series2
+                except Exception as e:
+                    logger.warning(f"Could not translate dataset names: {e}")
+                    # Continue with original names if translation fails
             
             # Select templates based on language
             if language == 'fr':

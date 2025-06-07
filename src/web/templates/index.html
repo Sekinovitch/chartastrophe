@@ -572,11 +572,53 @@
 
     <script>
         let currentCorrelation = null;
+        let datasetTranslations = {};
+        let translationsLoaded = false;
+        
+        // Load dataset translations for French
+        const lang = '{{ lang }}';
+        
+        async function loadDatasetTranslations() {
+            if (lang === 'fr') {
+                try {
+                    const response = await fetch('/api/dataset-translations');
+                    const data = await response.json();
+                    if (data.status === 'success') {
+                        datasetTranslations = data.translations;
+                        console.log(`✅ Loaded ${Object.keys(datasetTranslations).length} dataset translations`);
+                    }
+                } catch (err) {
+                    console.warn('Could not load dataset translations:', err);
+                }
+            } else {
+                // Clear translations for English
+                datasetTranslations = {};
+            }
+            translationsLoaded = true;
+        }
+        
+        // Load translations on page load and wait for them
+        loadDatasetTranslations();
+        
+        function translateDatasetName(englishName) {
+            // Only translate if we're in French mode and have translations
+            if (lang === 'fr' && datasetTranslations && datasetTranslations[englishName]) {
+                console.log(`🔄 Translating: ${englishName} → ${datasetTranslations[englishName]}`);
+                return datasetTranslations[englishName];
+            }
+            return englishName; // Fallback to original if no translation found or not in French
+        }
 
         document.getElementById('generateBtn').addEventListener('click', async () => {
             // Show loading
             document.getElementById('loading').style.display = 'block';
             document.getElementById('correlationCard').style.display = 'none';
+
+            // Wait for translations to load if needed
+            if (lang === 'fr' && !translationsLoaded) {
+                console.log('⏳ Waiting for translations to load...');
+                await loadDatasetTranslations();
+            }
 
             try {
                 // API call
@@ -592,7 +634,16 @@
                     let title = data.explanation?.title || data.title || (lang === 'fr' ? 'Corrélation trouvée!' : 'Correlation found!');
                     let explanation = data.explanation?.explanation || (lang === 'fr' ? 'Cette corrélation montre une relation statistique intéressante entre les deux variables.' : 'This correlation shows an interesting statistical relationship between the two variables.');
                     
-                    updateCorrelationTitle(title, data.series1_name, data.series2_name);
+                    // Translate dataset names if French is selected
+                    let series1Name = data.series1_name;
+                    let series2Name = data.series2_name;
+                    if (lang === 'fr') {
+                        series1Name = translateDatasetName(data.series1_name);
+                        series2Name = translateDatasetName(data.series2_name);
+                        console.log(`📊 Translated titles: ${data.series1_name} → ${series1Name}, ${data.series2_name} → ${series2Name}`);
+                    }
+                    
+                    updateCorrelationTitle(title, series1Name, series2Name);
                     document.getElementById('correlationExplanation').textContent = explanation;
 
                     // Hide sources by default
@@ -686,6 +737,16 @@
         }
 
         function createSimpleGraph(data) {
+            const lang = '{{ lang }}';
+            let series1Name = data.series1_name;
+            let series2Name = data.series2_name;
+            
+            // Translate dataset names if French is selected
+            if (lang === 'fr') {
+                series1Name = translateDatasetName(data.series1_name);
+                series2Name = translateDatasetName(data.series2_name);
+            }
+            
             const trace = {
                 x: data.data_x,
                 y: data.data_y,
@@ -701,15 +762,15 @@
 
             const layout = {
                 title: {
-                    text: `Correlation: ${data.series1_name} vs ${data.series2_name}`,
+                    text: `Correlation: ${series1Name} vs ${series2Name}`,
                     font: { size: 16 }
                 },
                 xaxis: {
-                    title: data.series1_name,
+                    title: series1Name,
                     gridcolor: 'rgba(128,128,128,0.2)'
                 },
                 yaxis: {
-                    title: data.series2_name,
+                    title: series2Name,
                     gridcolor: 'rgba(128,128,128,0.2)'
                 },
                 plot_bgcolor: 'white',
@@ -723,7 +784,17 @@
         // Share handlers
         document.getElementById('shareTwitter').addEventListener('click', () => {
             if (currentCorrelation) {
-                const text = `🔍 Discovery: ${currentCorrelation.title}! ${(Math.abs(currentCorrelation.correlation) * 100).toFixed(1)}% correlation between ${currentCorrelation.series1_name} and ${currentCorrelation.series2_name}. #Chartastrophe #Data`;
+                const lang = '{{ lang }}';
+                let series1Name = currentCorrelation.series1_name;
+                let series2Name = currentCorrelation.series2_name;
+                
+                // Translate dataset names if French is selected
+                if (lang === 'fr') {
+                    series1Name = translateDatasetName(currentCorrelation.series1_name);
+                    series2Name = translateDatasetName(currentCorrelation.series2_name);
+                }
+                
+                const text = `🔍 Discovery: ${currentCorrelation.title}! ${(Math.abs(currentCorrelation.correlation) * 100).toFixed(1)}% correlation between ${series1Name} and ${series2Name}. #Chartastrophe #Data`;
                 const url = encodeURIComponent(window.location.href);
                 window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${url}`, '_blank');
             }
@@ -804,11 +875,22 @@
                         // Variables
                         bottomY += 80;
                         ctx.font = '30px Arial';
-                        ctx.fillText(`${currentCorrelation.series1_name}`, canvas.width / 2, bottomY);
+                        
+                        const lang = '{{ lang }}';
+                        let series1Name = currentCorrelation.series1_name;
+                        let series2Name = currentCorrelation.series2_name;
+                        
+                        // Translate dataset names if French is selected
+                        if (lang === 'fr') {
+                            series1Name = translateDatasetName(currentCorrelation.series1_name);
+                            series2Name = translateDatasetName(currentCorrelation.series2_name);
+                        }
+                        
+                        ctx.fillText(`${series1Name}`, canvas.width / 2, bottomY);
                         bottomY += 45;
                         ctx.fillText('VS', canvas.width / 2, bottomY);
                         bottomY += 45;
-                        ctx.fillText(`${currentCorrelation.series2_name}`, canvas.width / 2, bottomY);
+                        ctx.fillText(`${series2Name}`, canvas.width / 2, bottomY);
                         
                         // Chartastrophe logo/signature at bottom
                         ctx.font = '24px Arial';
@@ -884,11 +966,22 @@
             // Variables
             y += 120;
             finalCtx.font = '32px Arial';
-            finalCtx.fillText(data.series1_name, finalCanvas.width / 2, y);
+            
+            const lang = '{{ lang }}';
+            let series1Name = data.series1_name;
+            let series2Name = data.series2_name;
+            
+            // Translate dataset names if French is selected
+            if (lang === 'fr') {
+                series1Name = translateDatasetName(data.series1_name);
+                series2Name = translateDatasetName(data.series2_name);
+            }
+            
+            finalCtx.fillText(series1Name, finalCanvas.width / 2, y);
             y += 60;
             finalCtx.fillText('VS', finalCanvas.width / 2, y);
             y += 60;
-            finalCtx.fillText(data.series2_name, finalCanvas.width / 2, y);
+            finalCtx.fillText(series2Name, finalCanvas.width / 2, y);
             
             // Message about graph
             y += 120;
